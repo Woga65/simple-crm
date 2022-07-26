@@ -1,0 +1,63 @@
+<h1 mat-dialog-title>{{ getLocalFormat().form.title || 'Add user' }}</h1>
+<div mat-dialog-content>
+
+  <div>
+    <mat-form-field class="mr-16" appearance="outline">
+      <mat-label>{{ getLocalFormat().firstName.text || 'First Name' }}</mat-label>
+      <input matInput placeholder="John">
+      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+      <!-- <mat-hint>please enter a name</mat-hint> -->
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ getLocalFormat().lastName.text || 'Last Name' }}</mat-label>
+      <input matInput placeholder="Doe">
+      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+      <!-- <mat-hint>please enter a name</mat-hint> -->
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="mr-16 birth-date" appearance="outline">
+      <mat-label>{{ getLocalFormat().birthDate.text || 'Date of birth' }}</mat-label>
+      <input matInput [matDatepicker]="dp">
+      <mat-hint>{{ getLocalFormat().birthDate.hint || ''}}</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>{{ getLocalFormat().street.text || 'Street + House No' }}</mat-label>
+      <input matInput placeholder="85 Fleet Street">
+      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+      <!-- <mat-hint>please enter address</mat-hint> -->
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="mr-16" appearance="outline">
+      <mat-label>{{ getLocalFormat().zipCode.text || 'Zip code' }}</mat-label>
+      <input matInput placeholder="EC4Y 1AE">
+      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+      <!-- <mat-hint>please enter address</mat-hint> -->
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ getLocalFormat().town.text || 'Town' }}</mat-label>
+      <input matInput placeholder="London">
+      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+      <!-- <mat-hint>please enter address</mat-hint> -->
+    </mat-form-field>
+  </div>
+
+
+</div>
+<div mat-dialog-actions class="add-user-buttons">
+  <div>
+    <button mat-button (click)="onNoClick()">{{ getLocalFormat().form.cancel || 'Cancel' }}</button>
+    <button mat-button [mat-dialog-close]="" cdkFocusInitial>{{ getLocalFormat().form.save || 'Save' }}</button>
+  </div>
+  <button mat-button (click)="deutsch()">{{ getLocalFormat().form.lang || 'german' }}</button>
+</div>

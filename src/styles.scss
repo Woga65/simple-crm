@@ -1,4 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 
+*, *::after, *::before {
+    box-sizing: border-box;
+}
+
+:root {
+    --font-size: 1rem;
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.mr-16 {
+    margin-right: calc(var(--font-size) * 1.1);
+}
+
+.full-width {
+    width: 100%
+}

@@ -4,7 +4,7 @@
 
 .menu-icon {
     cursor: pointer;
-    padding-right: 1rem;
+    min-width: calc(var(--font-size) * 2.5);
 }
 
 .sidenav {
@@ -14,19 +14,19 @@
         list-style-type: none;
         padding: 0;
         margin: 0;
-        margin-top: 0.5rem;
+        margin-top: calc(var(--font-size) * .5);
     }
 
     li {
         display: flex;
         align-items: center;
-        padding-left: 1.1rem;
-        padding-right: 1.1rem;
-        height: 2.5rem;
+        padding-left: calc(var(--font-size) * 1.1);
+        padding-right: calc(var(--font-size) * 1.1);
+        height: calc(var(--font-size) * 2.5);
         cursor: pointer;
 
         mat-icon {
-            margin-right: 1.1rem;
+            margin-right: calc(var(--font-size) * 1.1);
         }
 
         &:hover {
@@ -36,13 +36,20 @@
 }
 
 .logo-container {
-    padding-left: 1.1rem;
-    padding-right: 1.1rem;
-    border-bottom: 1px solid lightgray;
+    padding-left: calc(var(--font-size) * 1.1);
+    padding-right: calc(var(--font-size) * 1.1);
+    //border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
 }
 
 mat-toolbar, mat-toolbar-row, .logo-container {
-    min-height: 3.5rem;
+    min-height: calc(var(--font-size) * 3.5);
+    height: calc(var(--font-size) * 3.5);
+}
+
+.router-container {
+    padding-left: calc(var(--font-size) * 3.5);
+    padding-top: calc(var(--font-size) * 1.1);
 }
