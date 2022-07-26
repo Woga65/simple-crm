@@ -28,7 +28,7 @@ export class DialogAddUserComponent implements OnInit {
   onNoClick() {
   }
 
-  deutsch() {
+  switchLang() {
     this.currentLang = (this.currentLang + 1) % this.languages.length;
     this._locale = this.languages[this.currentLang];
     this._adapter.setLocale(this._locale);
@@ -73,9 +73,10 @@ export class DialogAddUserComponent implements OnInit {
 
   gbFormat(): any {
     return { 
-      form: { lang: 'English (GB)' }, firstName: {}, lastName: {}, 
+      form: { lang: 'English (GB)' }, firstName: { placeholder: 'John' }, lastName: { placeholder: 'Smith' }, 
       birthDate: { hint: 'DD/MM/YYYY' },
-      street: {}, zipCode: {}, town: {}, 
+      street: { text: 'House No + Street', placeholder: '85 Fleet street' }, 
+      zipCode: { text: 'Postcode', placeholder: 'EC4Y 1AE' }, town: { placeholder: 'London'}, 
     };
   }
 
