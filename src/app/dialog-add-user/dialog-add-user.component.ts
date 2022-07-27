@@ -42,13 +42,13 @@ export class DialogAddUserComponent implements OnInit {
     console.log('User: ', this.user);
   }
 
-  saveUser() {
+  async saveUser() {
     this.loading = true;
     this.user.birthDate = new Date(this.birthDate).getTime();
     console.log('User: ', this.user);
     console.log('User JSON: ', this.user.toJSON());
 
-    (async () => {
+    //(async () => {
       try {
         await setDoc(doc(this.coll), this.user.toJSON());
         console.log('User written to backend successfully.');
@@ -58,7 +58,7 @@ export class DialogAddUserComponent implements OnInit {
         console.error('Failed to write user to backend: ', error);
         this.loading = false;
       }
-    })();
+    //})();
 
     /*
     setDoc(doc(this.coll), this.user.toJSON())
