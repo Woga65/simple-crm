@@ -7,3 +7,15 @@
     align-items: center;
     justify-content: space-between;
 }
+
+.dialog-container {
+    position: relative;
+
+    .mat-progress-bar {
+        position: absolute;
+        left: -1.5rem;
+        right: -1.5rem;
+        top: -1.5rem;
+        width: calc(100% + 3rem);
+    }
+}
