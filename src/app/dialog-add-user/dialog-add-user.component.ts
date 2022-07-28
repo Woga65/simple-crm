@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Firestore, collectionData, collection, setDoc, doc } from '@angular/fire/firestore';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { User } from 'src/models/user.class';
 
 //import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, } from '@angular/material-moment-adapter';
@@ -26,7 +27,12 @@ export class DialogAddUserComponent implements OnInit {
   firestore: Firestore;
   coll: any;
 
-  constructor(private _adapter: DateAdapter<any>, @Inject(MAT_DATE_LOCALE) private _locale: string, firestore: Firestore) {
+  constructor(
+    public dialogRef: MatDialogRef<DialogAddUserComponent>,
+    private _adapter: DateAdapter<any>,
+    @Inject(MAT_DATE_LOCALE) private _locale: string,
+    firestore: Firestore) {
+
     this.firestore = firestore;
     this.coll = collection(this.firestore, 'users');
   }
@@ -39,38 +45,31 @@ export class DialogAddUserComponent implements OnInit {
   }
 
   onNoClick() {
-    console.log('User: ', this.user);
+    this.dialogRef.close(true);
   }
 
   async saveUser() {
-    this.loading = true;
     this.user.birthDate = new Date(this.birthDate).getTime();
-    console.log('User: ', this.user);
-    console.log('User JSON: ', this.user.toJSON());
 
-    //(async () => {
-      try {
-        await setDoc(doc(this.coll), this.user.toJSON());
-        console.log('User written to backend successfully.');
-        this.loading = false;
-      }
-      catch(error) {
-        console.error('Failed to write user to backend: ', error);
-        this.loading = false;
-      }
-    //})();
+    try {
+      this.loading = true;
+      const newDocRef = doc(this.coll);
+      this.user.id = newDocRef.id;
+      await setDoc(newDocRef, this.user.toJSON());
+      console.log(`User written to backend successfully. id: ${newDocRef.id}, path: ${newDocRef.path}`);
+      this.dialogRef.close(true);
+    }
+    catch (error) {
+      console.error('Failed to write user to backend: ', error);
+      this.dialogRef.close(false);
+    }
+    finally {
+      this.loading = false;
+    }
 
-    /*
-    setDoc(doc(this.coll), this.user.toJSON())
-      .then(() => {
-        console.log('User written to backend successfully.');
-      })
-      .catch(err => {
-        console.error('Failed to write user to backend: ', err);
-      });
-    */
 
-// old API
+  // old API
+  //
     /*this.firestore
       .collection('users')
       .add(this.user)
@@ -112,6 +111,7 @@ export class DialogAddUserComponent implements OnInit {
       firstName: { text: 'Vorname', placeholder: 'Wolfgang' },
       lastName: { text: 'Familienname', placeholder: 'Siebert' },
       birthDate: { text: 'Geburtsdatum', hint: 'DD.MM.YYYY' },
+      eMail: { text: 'E-Mail-Adresse', placeholder: 'woga@web.de' },
       street: { text: 'Straße + Haus', placeholder: 'Annastraße 16' },
       zipCode: { text: 'PLZ', placeholder: '34117' },
       town: { text: 'Ort', placeholder: 'Kassel' },
@@ -121,7 +121,7 @@ export class DialogAddUserComponent implements OnInit {
   usFormat(): any {
     return {
       form: { lang: 'English (US)' }, firstName: {}, lastName: {},
-      birthDate: { hint: 'MM/DD/YYYY' },
+      birthDate: { hint: 'MM/DD/YYYY' }, eMail: {},
       street: {}, zipCode: {}, town: {},
     };
   }
@@ -129,7 +129,7 @@ export class DialogAddUserComponent implements OnInit {
   gbFormat(): any {
     return {
       form: { lang: 'English (GB)' }, firstName: { placeholder: 'John' }, lastName: { placeholder: 'Smith' },
-      birthDate: { hint: 'DD/MM/YYYY' },
+      birthDate: { hint: 'DD/MM/YYYY' }, eMail: { placeholder: 'john@smith.co.uk' },
       street: { text: 'House No + Street', placeholder: '85 Fleet street' },
       zipCode: { text: 'Postcode', placeholder: 'EC4Y 1AE' }, town: { placeholder: 'London' },
     };
@@ -138,7 +138,7 @@ export class DialogAddUserComponent implements OnInit {
   jpFormat(): any {
     return {
       form: { lang: 'English (JP)' }, firstName: {}, lastName: {},
-      birthDate: { hint: 'YYYY/MM/DD' },
+      birthDate: { hint: 'YYYY/MM/DD' }, eMail: {},
       street: {}, zipCode: {}, town: {},
     }
   };
@@ -146,7 +146,7 @@ export class DialogAddUserComponent implements OnInit {
   defaultFormat(): any {
     return {
       form: { lang: 'English (US)' }, firstName: {}, lastName: {},
-      birthDate: { hint: '' },
+      birthDate: { hint: '' }, eMail: {},
       street: {}, zipCode: {}, town: {},
     };
   }

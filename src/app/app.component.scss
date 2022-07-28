@@ -42,6 +42,10 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
+    img {
+        max-width: 100%;
+        height: calc(var(--font-size) * 3.5);
+    }
 }
 
 mat-toolbar, mat-toolbar-row, .logo-container {
@@ -51,5 +55,6 @@ mat-toolbar, mat-toolbar-row, .logo-container {
 
 .router-container {
     padding-left: calc(var(--font-size) * 3.5);
+    padding-right: calc(var(--font-size) * 3.5);
     padding-top: calc(var(--font-size) * 1.1);
 }

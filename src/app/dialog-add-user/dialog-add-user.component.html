@@ -1,4 +1,5 @@
 <div class="dialog-container">
+
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
   <h1 mat-dialog-title>{{ getLocalFormat().form.title || 'Add user' }}</h1>
@@ -29,6 +30,14 @@
         <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
         <mat-datepicker #dp></mat-datepicker>
       </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ getLocalFormat().eMail.text || 'E-Mail' }}</mat-label>
+        <input [disabled]="loading" [(ngModel)]="user.eMail" matInput placeholder="{{ getLocalFormat().eMail.placeholder || 'john@doe.com' }}">
+        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+        <!-- <mat-hint>please enter an e-mail address</mat-hint> -->
+      </mat-form-field>
+
     </div>
 
     <div>
@@ -67,4 +76,5 @@
     </div>
     <button [disabled]="loading" mat-button (click)="switchLang()">{{ getLocalFormat().form.lang || 'English (US)' }}</button>
   </div>
-</div>
+
+<div>

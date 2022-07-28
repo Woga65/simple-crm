@@ -1,4 +1,33 @@
-<p>user works!</p>
+<mat-card>
+    <mat-card-title>Users List</mat-card-title>
+    <div class="table-container">
+        <table class="user-table">
+            <colgroup>
+                <col span="1" class="user-col-1">
+                <col span="1" class="user-col-2">
+                <col span="1" class="user-col-2">
+                <col span="1" class="user-col-2">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">E-Mail</th>
+                    <th scope="col">Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users$ | async; let i = index;" [routerLink]="['/user/' + user.id]">
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td>{{ user.firstName + ' ' + user.lastName }}</td>
+                    <td>{{ user.eMail }}</td>
+                    <td>{{ user.street + ', ' + user.zipCode + ' ' + user.city }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</mat-card>
+
 <button class="add-user-button" (click)="openDialog()"
         mat-fab color="primary" 
         aria-label="button with a plus icon" 
