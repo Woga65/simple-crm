@@ -17,6 +17,12 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "moment/locale/ja",
+              "moment/locale/fr",
+              "moment/locale/de",
+              "moment/locale/en-gb"
+            ],
             "outputPath": "dist/simple-crm",
             "index": "src/index.html",
             "main": "src/main.ts",
