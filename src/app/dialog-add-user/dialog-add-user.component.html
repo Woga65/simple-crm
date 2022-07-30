@@ -2,7 +2,7 @@
 
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-  <h1 mat-dialog-title>{{ getLocalFormat().form.title || 'Add user' }}</h1>
+  <h1 mat-dialog-title>{{ userExists ? getLocalFormat().update.title || 'Update user' : getLocalFormat().form.title || 'Add user'}}</h1>
   <div mat-dialog-content>
 
     <div>
@@ -73,6 +73,7 @@
     <div>
       <button [disabled]="loading" mat-button (click)="onNoClick()">{{ getLocalFormat().form.cancel || 'Cancel' }}</button>
       <button [disabled]="loading" mat-button (click)="saveUser()" cdkFocusInitial>{{ getLocalFormat().form.save || 'Save' }}</button>
+      <button *ngIf="userExists" [disabled]="loading" mat-button (click)="deleteUser()">{{ getLocalFormat().update.delete || 'Delete' }}</button>
     </div>
     <button [disabled]="loading" mat-button (click)="switchLang()">{{ getLocalFormat().form.lang || 'English (US)' }}</button>
   </div>

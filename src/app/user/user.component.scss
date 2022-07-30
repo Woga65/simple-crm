@@ -18,11 +18,15 @@
     }
 
     .user-col-2 {
-        width: 33.33%;
+        width: 16.67%;
     }
 
     .user-col-3 {
-        width: 10%;
+        width: 30.0%;
+    }
+
+    .user-col-4 {
+        width: 33.33%;
     }
 
     th {
@@ -75,11 +79,11 @@ mat-card {
     padding-left: 0;
     padding-right: 0;
 
-    mat-card-title {
+    /*mat-card-title {
         color: rgba(0, 0, 0, 0.87);
         font-size: calc(var(--font-size) * 1.0);
         margin-bottom: calc(var(--font-size) * 1.1);
         padding-left: calc(var(--font-size) * 1.1);
         padding-right: calc(var(--font-size) * 1.1);
-    }
+    }*/
 }

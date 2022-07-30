@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Firestore, collectionData, collection, setDoc, doc, CollectionReference, DocumentData, getFirestore } from '@angular/fire/firestore';
+import { Firestore, collectionData, collection, CollectionReference } from '@angular/fire/firestore';
+import { DocumentData, getFirestore, setDoc, doc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { User } from 'src/models/user.class';
 import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
@@ -14,10 +15,9 @@ export class UserComponent implements OnInit {
 
   user: User = new User();
   firestore: Firestore;
-  coll: CollectionReference<any>;
-  users$: Observable<any>;
-  users: Array<any> = [];
-
+  coll: CollectionReference<DocumentData>;
+  users$: Observable<DocumentData[]>;
+  users: Array<DocumentData> = [];
 
   constructor(public dialog: MatDialog, firestore: Firestore) {
     this.firestore = firestore;

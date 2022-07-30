@@ -18,6 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu'; 
 
 // Material Date localisation
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -67,6 +68,7 @@ import { UserDetailsComponent } from './user-details/user-details.component';
     MatMomentDateModule,
     MatProgressBarModule,
     MatCardModule,
+    MatMenuModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
@@ -79,6 +81,7 @@ import { UserDetailsComponent } from './user-details/user-details.component';
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
+    //{ provide: MatDialogRef, useValue: {} },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
   ],
   bootstrap: [AppComponent]

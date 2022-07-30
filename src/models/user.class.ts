@@ -14,10 +14,20 @@ export class User {
     }
     
     public toJSON() {
+        return { ...this };
+    }
+}
+
+    /*
+    public toJSON() {
+        return Object.assign({}, this);
+    }
+    public toJSON() {
         let json = '{';
         for (const prop in this) {
+            if (prop.startsWith('_')) continue;
             json += Number.isInteger(this[prop]) ? `"${prop}":${this[prop]},` : `"${prop}":"${this[prop]}",`; 
         }
         return JSON.parse(json.replace(/.$/,"}"));
     }
-}
+    */
