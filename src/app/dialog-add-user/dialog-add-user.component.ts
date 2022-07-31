@@ -1,7 +1,8 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, SecurityContext } from '@angular/core';
 import { Firestore, collection, setDoc, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
 import { User } from 'src/models/user.class';
 
 
@@ -28,7 +29,8 @@ export class DialogAddUserComponent implements OnInit {
     private _adapter: DateAdapter<any>,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
     firestore: Firestore,
-    @Inject(MAT_DIALOG_DATA) private data:any) {
+    @Inject(MAT_DIALOG_DATA) private data:any,
+    private sanitizer:DomSanitizer) {
 
     this.data = this.data || {};
     this.firestore = firestore;
@@ -46,11 +48,13 @@ export class DialogAddUserComponent implements OnInit {
   }
 
   onNoClick() {
+    this.sanitizeUser();
     this.dialogRef.close(true);
   }
 
   saveUser() {
     this.user.birthDate = new Date(this.birthDate).getTime();
+    this.sanitizeUser();
     this.userExists ? this.updateUser() : this.addUser();
   }
 
@@ -108,6 +112,16 @@ export class DialogAddUserComponent implements OnInit {
       this.loading = false;
     }
     this.dialogRef.close(true);
+  }
+
+
+  sanitizeUser() {
+    const user:any = this.user;
+    for (const prop in user)
+      user[prop] = Number.isInteger(user[prop]) ?
+        user[prop] : 
+        this.sanitizer.sanitize(SecurityContext.HTML, user[prop]);
+    this.user = new User(user);
   }
 
 

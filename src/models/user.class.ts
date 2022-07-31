@@ -18,6 +18,7 @@ export class User {
     }
 }
 
+
     /*
     public toJSON() {
         return Object.assign({}, this);

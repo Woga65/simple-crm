@@ -17,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let user of users$ | async; let i = index;" [routerLink]="['/user/' + user['id']]">
+                <tr *ngFor="let user of users$ | async; let i = index;" (click)="editUser(user['id'])"> <!--</tr>[routerLink]="['/user/' + user['id']]">-->
                     <th scope="row">{{ i + 1 }}</th>
                     <td>{{ user['firstName'] + ' ' + user['lastName'] }}</td>
                     <td>{{ user['eMail'] }}</td>
@@ -28,7 +28,7 @@
     </div>
 </mat-card>
 
-<button class="add-user-button" (click)="openDialog()"
+<button class="add-user-button" (click)="newUser()"
         mat-fab color="primary" 
         aria-label="button with a plus icon" 
         matTooltip="add user"
