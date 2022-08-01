@@ -54,7 +54,7 @@ export class DialogAddUserComponent implements OnInit {
 
   saveUser() {
     this.user.birthDate = new Date(this.birthDate).getTime();
-    this.sanitizeUser();
+    //this.sanitizeUser();
     this.userExists ? this.updateUser() : this.addUser();
   }
 
