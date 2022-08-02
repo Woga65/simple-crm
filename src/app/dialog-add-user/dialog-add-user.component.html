@@ -2,21 +2,24 @@
 
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-  <h1 mat-dialog-title>{{ userExists ? getLocalFormat().update.title || 'Update user' : getLocalFormat().form.title || 'Add user'}}</h1>
+  <h1 mat-dialog-title>
+    {{ userExists ? localize().update.title || 'Update user' : localize().form.title || 'Add user'}}
+  </h1>
   <div mat-dialog-content>
 
     <div>
       <mat-form-field class="mr-16" appearance="outline">
-        <mat-label>{{ getLocalFormat().firstName.text || 'First Name' }}</mat-label>
+        <mat-label>{{ localize().firstName.text || 'First Name' }}</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.firstName" matInput
-          placeholder="{{ getLocalFormat().firstName.placeholder || 'John' }}">
+          placeholder="{{ localize().firstName.placeholder || 'John' }}">
         <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
         <!-- <mat-hint>please enter a name</mat-hint> -->
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>{{ getLocalFormat().lastName.text || 'Last Name' }}</mat-label>
-        <input [disabled]="loading" [(ngModel)]="user.lastName" matInput placeholder="{{ getLocalFormat().lastName.placeholder || 'Doe' }}">
+        <mat-label>{{ localize().lastName.text || 'Last Name' }}</mat-label>
+        <input [disabled]="loading" [(ngModel)]="user.lastName" matInput
+          placeholder="{{ localize().lastName.placeholder || 'Doe' }}">
         <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
         <!-- <mat-hint>please enter a name</mat-hint> -->
       </mat-form-field>
@@ -24,16 +27,17 @@
 
     <div>
       <mat-form-field class="mr-16 birth-date" appearance="outline">
-        <mat-label>{{ getLocalFormat().birthDate.text || 'Date of birth' }}</mat-label>
+        <mat-label>{{ localize().birthDate.text || 'Date of birth' }}</mat-label>
         <input [disabled]="loading" [(ngModel)]="birthDate" matInput [matDatepicker]="dp">
-        <mat-hint>{{ getLocalFormat().birthDate.hint || ''}}</mat-hint>
+        <mat-hint>{{ localize().birthDate.hint || ''}}</mat-hint>
         <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
         <mat-datepicker #dp></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>{{ getLocalFormat().eMail.text || 'E-Mail' }}</mat-label>
-        <input [disabled]="loading" [(ngModel)]="user.eMail" matInput placeholder="{{ getLocalFormat().eMail.placeholder || 'john@doe.com' }}">
+        <mat-label>{{ localize().eMail.text || 'E-Mail' }}</mat-label>
+        <input [disabled]="loading" [(ngModel)]="user.eMail" matInput
+          placeholder="{{ localize().eMail.placeholder || 'john@doe.com' }}">
         <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
         <!-- <mat-hint>please enter an e-mail address</mat-hint> -->
       </mat-form-field>
@@ -42,9 +46,9 @@
 
     <div>
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>{{ getLocalFormat().street.text || 'House No + Street' }}</mat-label>
+        <mat-label>{{ localize().street.text || 'House No + Street' }}</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.street" matInput
-          placeholder="{{ getLocalFormat().street.placeholder || '17 Adams Street' }}">
+          placeholder="{{ localize().street.placeholder || '17 Adams Street' }}">
         <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
         <!-- <mat-hint>please enter address</mat-hint> -->
       </mat-form-field>
@@ -52,16 +56,17 @@
 
     <div>
       <mat-form-field class="mr-16" appearance="outline">
-        <mat-label>{{ getLocalFormat().zipCode.text || 'Zip code' }}</mat-label>
-        <input [disabled]="loading" [(ngModel)]="user.zipCode" matInput placeholder="{{ getLocalFormat().zipCode.placeholder || '10312' }}">
+        <mat-label>{{ localize().zipCode.text || 'Zip code' }}</mat-label>
+        <input [disabled]="loading" [(ngModel)]="user.zipCode" matInput
+          placeholder="{{ localize().zipCode.placeholder || '10312' }}">
         <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
         <!-- <mat-hint>please enter address</mat-hint> -->
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>{{ getLocalFormat().town.text || 'Town' }}</mat-label>
+        <mat-label>{{ localize().town.text || 'Town' }}</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.city" matInput
-          placeholder="{{ getLocalFormat().town.placeholder || 'Staten Island, NY' }}">
+          placeholder="{{ localize().town.placeholder || 'Staten Island, NY' }}">
         <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
         <!-- <mat-hint>please enter address</mat-hint> -->
       </mat-form-field>
@@ -71,11 +76,15 @@
   </div>
   <div mat-dialog-actions class="add-user-buttons">
     <div>
-      <button [disabled]="loading" mat-button (click)="onNoClick()">{{ getLocalFormat().form.cancel || 'Cancel' }}</button>
-      <button [disabled]="loading" mat-button (click)="saveUser()" cdkFocusInitial>{{ getLocalFormat().form.save || 'Save' }}</button>
-      <button *ngIf="userExists" [disabled]="loading" mat-button (click)="deleteUser()">{{ getLocalFormat().update.delete || 'Delete' }}</button>
+      <button [disabled]="loading" mat-button (click)="onNoClick()">{{ localize().form.cancel || 'Cancel'
+        }}</button>
+      <button [disabled]="loading" mat-button (click)="saveUser()" cdkFocusInitial>{{ localize().form.save ||
+        'Save' }}</button>
+      <button *ngIf="userExists" [disabled]="loading" mat-button (click)="deleteUser()">{{
+        localize().update.delete || 'Delete' }}</button>
     </div>
-    <button [disabled]="loading" mat-button (click)="switchLang()">{{ getLocalFormat().form.lang || 'English (US)' }}</button>
+    <button [disabled]="loading" mat-button (click)="switchLang()">{{ localize().form.lang || 'English (US)'
+      }}</button>
   </div>
 
-<div>
+  <div>
