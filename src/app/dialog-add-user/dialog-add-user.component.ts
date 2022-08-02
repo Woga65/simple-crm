@@ -1,9 +1,8 @@
 import { Component, OnInit, Inject, SecurityContext } from '@angular/core';
-import { Firestore, collection, setDoc, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DomSanitizer } from '@angular/platform-browser';
 import { User } from 'src/models/user.class';
+import { UserService } from '../user.service';
 
 
 @Component({
@@ -19,24 +18,18 @@ export class DialogAddUserComponent implements OnInit {
 
   user: User; // = new User();
   birthDate: Date = new Date;
-  firestore: Firestore;
-  coll: any;
   userExists: boolean = false;
   
 
   constructor(
+    public userService: UserService,
     public dialogRef: MatDialogRef<DialogAddUserComponent>,
     private _adapter: DateAdapter<any>,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
-    firestore: Firestore,
-    @Inject(MAT_DIALOG_DATA) private data:any,
-    private sanitizer:DomSanitizer) {
+    @Inject(MAT_DIALOG_DATA) private data:any) {
 
     this.data = this.data || {};
-    this.firestore = firestore;
-    this.coll = collection(this.firestore, 'users');
     this.user = new User(this.data.user);
-
     this.userExists = this.user.id ? true : false;
   }
 
@@ -48,80 +41,37 @@ export class DialogAddUserComponent implements OnInit {
   }
 
   onNoClick() {
-    this.sanitizeUser();
     this.dialogRef.close(true);
   }
 
   saveUser() {
-    this.user.birthDate = new Date(this.birthDate).getTime();
-    //this.sanitizeUser();
-    this.userExists ? this.updateUser() : this.addUser();
+    if (this.user.hasData()) {
+      this.user.birthDate = new Date(this.birthDate).getTime();
+      this.userExists ? this.updateUser() : this.addUser();
+    } else {
+      console.log('Empty user data not written!');
+    }
   }
 
   async addUser() {
-    try {
-      this.loading = true;
-      const newDocRef = doc(this.coll);
-      this.user.id = newDocRef.id;
-      await setDoc(newDocRef, this.user.toJSON());
-      console.log(`New user written to backend successfully. id: ${newDocRef.id}, path: ${newDocRef.path}`);
-      this.dialogRef.close(true);
-    }
-    catch (error) {
-      console.error('Failed to write new user to backend: ', error);
-      this.dialogRef.close(false);
-    }
-    finally {
-      this.loading = false;
-    }
+    this.loading = true;
+    await this.userService.createUser(this.user);
+    this.loading = false;
+    this.dialogRef.close(true);
   }
 
   async updateUser() {
-    try {
-      this.loading = true;
-      const docRef = doc(this.coll, this.user.id);
-      const userData:any = this.user.toJSON();
-      await updateDoc(docRef, userData);
-      console.log(`User '${userData.firstName} ${userData.lastName}' updated successfully. id: ${docRef.id}, path: ${docRef.path}`);
-      this.dialogRef.close(true);
-    }
-    catch (error) {
-      console.error('Failed to update user: ', error);
-      this.dialogRef.close(false);
-    }
-    finally {
-      this.loading = false;
-    }
+    this.loading = true;
+    await this.userService.updateUser(this.user);
+    this.loading = false;
     this.dialogRef.close(true);
   }
-
 
   async deleteUser() {
-    try {
-      this.loading = true;
-      const docRef = doc(this.coll, this.user.id);
-      await deleteDoc(docRef);
-      console.log(`User '${this.user.firstName} ${this.user.lastName}' deleted successfully. id: ${docRef.id}, path: ${docRef.path}`);
-      this.dialogRef.close(true);
-    }
-    catch (error) {
-      console.error('Failed to delete user: ', error);
-      this.dialogRef.close(false);
-    }
-    finally {
-      this.loading = false;
-    }
+    this.loading = true;
+    await this.userService.deleteUser(this.user);
+    this.loading = false;
     this.dialogRef.close(true);
-  }
-
-
-  sanitizeUser() {
-    const user:any = this.user;
-    for (const prop in user)
-      user[prop] = Number.isInteger(user[prop]) ?
-        user[prop] : 
-        this.sanitizer.sanitize(SecurityContext.HTML, user[prop]);
-    this.user = new User(user);
   }
 
 
@@ -204,12 +154,29 @@ export class DialogAddUserComponent implements OnInit {
 
   // old API
   //
-    /*this.firestore
-      .collection('users')
-      .add(this.user)
-      .then(result => {
-        console.log('User written to backend successfully: ', result);
-      })
-      .catch(err => {
-        console.error('Failed to write user to backend: ', err);
-      });*/
+  /*
+  this.firestore
+    .collection('users')
+    .add(this.user)
+    .then(result => {
+      console.log('User written to backend successfully: ', result);
+    })
+    .catch(err => {
+      console.error('Failed to write user to backend: ', err);
+    });
+*/
+
+/*
+  import { DomSanitizer } from '@angular/platform-browser';
+  ...
+  constructor (public sanitizer: DomSanitizer) {}
+
+  sanitizeUser() {
+    const user:any = this.user;
+    for (const prop in user)
+      user[prop] = Number.isInteger(user[prop]) ?
+        user[prop] : 
+        this.sanitizer.sanitize(SecurityContext.HTML, user[prop]);
+    this.user = new User(user);
+  }
+*/

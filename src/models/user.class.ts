@@ -16,6 +16,11 @@ export class User {
     public toJSON() {
         return { ...this };
     }
+    
+    public hasData() {
+        for (const prop in this) if (this[prop]) return true;
+        return false;
+    }
 }
 
 
