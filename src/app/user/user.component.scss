@@ -5,10 +5,26 @@
     z-index: 10;
 }
 
+.filter-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    left: 0;
+    right: 0;
+    top: calc(var(--font-size) * 2.8);
+    z-index: 300;
+    margin-bottom: calc(var(--font-size) * -0.625);
+
+    .input-field {
+        min-width: 20vw;
+        max-width: 100vw;
+    }
+}
+
 .table-container {
     overflow-x: auto;
     padding-bottom: calc(var(--font-size) * 1.1);
-
 }
 
 mat-card {
@@ -78,7 +94,8 @@ mat-card {
     }
 
     .mat-row:hover .mat-cell {
-        border-color: currentColor;
+        //border-color: currentColor;
+        background-color: rgba(0, 0, 0, .05);
     }
 
     .mat-row:focus {
@@ -87,11 +104,12 @@ mat-card {
 
     tr:first-child td {
         padding-top: calc(var(--font-size) * 1.1);
+        padding-bottom: calc(var(--font-size) * 1.1);
     }
 }
 
 .data-table {
-    min-height: 128vh;
+    min-height: 85vh;
 }
 
 .mat-paginator {

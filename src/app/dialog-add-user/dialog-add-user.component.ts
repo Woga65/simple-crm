@@ -43,7 +43,7 @@ export class DialogAddUserComponent implements OnInit {
   }
 
   onNoClick() {
-    this.dialogRef.close(true);
+    this.closeDialog('cancelled');
   }
 
   saveUser() {
@@ -59,22 +59,27 @@ export class DialogAddUserComponent implements OnInit {
     this.loading = true;
     await this.userService.createUser(this.user);
     this.loading = false;
-    this.dialogRef.close(true);
+    this.closeDialog('added');
   }
 
   async updateUser() {
     this.loading = true;
     await this.userService.updateUser(this.user);
     this.loading = false;
-    this.dialogRef.close(true);
+    this.closeDialog('updated');
   }
 
   async deleteUser() {
     this.loading = true;
     await this.userService.deleteUser(this.user);
     this.loading = false;
-    this.dialogRef.close(true);
+    this.closeDialog('deleted');
   }
+
+  closeDialog(state: string = '') {
+    this.dialogRef.close({ state: state, lang: this._locale, user: this.user });
+  }
+
 
   switchLang() {
     this.currentLang = (this.currentLang + 1) % this.languages.length;
