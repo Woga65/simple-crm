@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatDrawerMode } from '@angular/material/sidenav';
 
 
 @Component({
@@ -9,6 +10,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'simple-crm';
   navOpen: boolean = true;
+  navMode: MatDrawerMode = 'side';
 
   constructor() {}
 }

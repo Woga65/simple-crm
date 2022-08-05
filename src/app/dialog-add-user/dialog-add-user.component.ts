@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, SecurityContext } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from 'src/models/user.class';
@@ -33,6 +33,7 @@ export class DialogAddUserComponent implements OnInit {
     this.data = this.data || {};
     this.user = new User(this.data.user);
     this.userExists = this.user.id ? true : false;
+    this.birthDate = new Date(this.user.birthDate);
   }
 
   ngOnInit(): void {

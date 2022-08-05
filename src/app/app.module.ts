@@ -88,6 +88,7 @@ import { UserDetailsComponent } from './user-details/user-details.component';
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
     //{ provide: MatDialogRef, useValue: {} },
+    //{ provide: MatDrawer, useValue: {} },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
   ],
   bootstrap: [AppComponent]

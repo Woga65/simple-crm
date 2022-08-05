@@ -2,7 +2,7 @@
 
 <mat-drawer-container class="mat-drawer-container" autosize>
 
-  <mat-drawer #drawer class="sidenav" [opened]="navOpen" mode="side">
+  <mat-drawer #drawer class="sidenav" [(opened)]="navOpen" [mode]="navMode">
     <div class="logo-container">
       <img src="assets/img/logo.png" alt="">
     </div>
@@ -16,7 +16,7 @@
     <mat-toolbar color="primary">
       <mat-toolbar-row>
         <mat-icon class="menu-icon" (click)="drawer.toggle()" aria-hidden="false" aria-label="menu icon">
-          menu
+            {{navMode == 'side' ? (navOpen ? 'arrow_back' : 'menu') : 'menu' }}
         </mat-icon>
         <span>Simple CRM</span>
       </mat-toolbar-row>

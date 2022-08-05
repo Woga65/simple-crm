@@ -2,7 +2,7 @@ export class User {
     id: string = ''
     firstName: string = '';
     lastName: string = '';
-    birthDate: number = 0;
+    birthDate: number = new Date('1990-01-01').getTime(); ;
     eMail: string = '';
     street: string = '';
     zipCode: string = '';

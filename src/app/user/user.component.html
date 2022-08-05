@@ -9,7 +9,8 @@
 
 <div class="filter-container">
   <!-- <label class="filter-input input-label" *ngIf="true">Filter:</label> -->
-  <input tabindex="1" class="filter-input input-field" type="text" placeholder="Filter ..." (keyup)="applyFilter($event)">
+  <input tabindex="1" class="filter-input input-field" type="text" placeholder="Filter ..." 
+    (keyup)="applyFilter($event)" (focus)="tableObserver.disconnect()" (blur)="tableObserver = observeUserTable()">
 </div>
 
 
@@ -53,8 +54,8 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
     <!-- Data Rows -->
-      <tr tabindex="1" mat-row *matRowDef="let row; let i=index; columns: displayedColumns;"
-        (click)="editUser(row.id)" (keyup)="checkKeys($event, row.id, i)">
+      <tr tabindex="1" mat-row *matRowDef="let row; let i=index; columns: displayedColumns;" id="row-{{i}}"
+        (click)="editUser(row.id)" (keydown)="checkKeys($event, row.id, i)">
       </tr>
     </table>
   </div>  
@@ -63,6 +64,7 @@
 
 <mat-paginator  [pageSizeOptions]="[5, 10, 20]"
                 [pageSize]="10"
+                [pageIndex]="pageIndex"
                 showFirstLastButtons 
                 aria-label="Select page of users">
 </mat-paginator>
