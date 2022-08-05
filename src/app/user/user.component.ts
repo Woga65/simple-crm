@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, Inject, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -46,11 +46,15 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void { }
+
+  ngOnInit(): void {
+  }
+
 
   ngAfterViewInit() {
     this.tableObserver = this.observeUserTable();
   }
+
 
   ngOnDestroy() {
     this.tableObserver.disconnect();
@@ -61,15 +65,19 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     this.openDialog(new User);
   }
 
+
   async editUser(userId: string) {
+    console.log('user:', userId);
     await this.getUser(userId);
     this.openDialog(this.user);
   }
+
 
   async getUser(userId: string) {
     this.user = new User(await this.userService.getUserDoc(userId));
     console.log('user read: ', this.user.toJSON());
   }
+
 
   openDialog(user: User = new User) {
     const dialogRef = this.dialog.open(DialogAddUserComponent, { data: { user: user } });
@@ -83,10 +91,12 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(sortState.direction ? `${sortState.active} sorted ${sortState.direction}ending` : `sorting cleared`);
   }
 
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
 
   userBirthDateToString(user: Array<any>): any {
     return user.map(u => {
@@ -96,40 +106,44 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  checkKeys(event: any, id: any, i: any = 0) {
-    const validKeys = ['Enter', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'];
-    /*if (validKeys.includes(event.code)) {
-      event.preventDefault();
-    }*/
-    event.stopPropagation();
-    const el = this.getTableElements(event.target);
+  checkKeys(e: any, id: any, row: any = 0) {
+    const el = this.getTableElements(e.target);
     const pg: MatPaginator = this.paginator;
-    if (event.key != 'Shift' && el.count) {
-      switch (event.code) {
-        case 'Enter':
-          this.editUser(id);
-          break;
-        case 'ArrowUp':
-          el.prev ? el.prev.focus() : el.last.focus();
-          break;
-        case 'ArrowDown':
-          el.next ? el.next.focus() : el.first.focus();
-          break;
-        case 'PageUp':
-          pg.hasPreviousPage() ? pg.previousPage() : pg.lastPage();
-          break;
-        case 'PageDown':
-          pg.hasNextPage() ? pg.nextPage() : pg.firstPage();
-          break;
-        case 'Home':
-          pg.firstPage();
-          break;
-        case 'End':
-          pg.lastPage();
-          break;
-      }
-    }
+    const modifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey || e.key == "AltGraph";
+    const validActions = [
+      { key: 'Enter', callback: this.editUser.bind(this) },
+      { key: 'ArrowUp', callback: this.prevRow },
+      { key: 'ArrowDown', callback: this.nextRow },
+      { key: 'PageUp', callback: this.prevPage },
+      { key: 'PageDown', callback: this.nextPage },
+      { key: 'Home', callback: pg.firstPage.bind(this.paginator) },
+      { key: 'End', callback: pg.lastPage.bind(this.paginator) },
+    ]
+    e.stopPropagation();
+    if (!modifier) {
+      validActions.forEach(k => e.code == k.key ? k.callback(id, el, pg, row, e) : false);
+    } 
   }
+
+
+  prevRow(a:any, el:any, b:any, r:number, ev:any) {
+    if (r > 4) ev.preventDefault();
+    el.prev ? el.prev.focus() : el.last.focus();
+  }
+
+  nextRow(a:any, el:any, b:any, r:number, ev:any) {
+    if (r < 4) ev.preventDefault();
+    el.next ? el.next.focus() : el.first.focus();
+  }
+  
+  prevPage(a:any, b:any, pg:any) {
+    pg.hasPreviousPage() ? pg.previousPage() : pg.lastPage();
+  }
+
+  nextPage(a:any, b:any, pg:any) {
+    pg.hasNextPage() ? pg.nextPage() : pg.firstPage();
+  }
+
 
   getTableElements(el: HTMLElement): object | any {
     return {
@@ -140,6 +154,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       last: el.parentElement?.lastElementChild
     }
   }
+
 
   observeUserTable() {
     const table: HTMLTableElement | any = document.querySelector('table');
