@@ -98,9 +98,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
   checkKeys(event: any, id: any, i: any = 0) {
     const validKeys = ['Enter', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'];
-    if (validKeys.includes(event.code)) {
+    /*if (validKeys.includes(event.code)) {
       event.preventDefault();
-    }
+    }*/
     event.stopPropagation();
     const el = this.getTableElements(event.target);
     const pg: MatPaginator = this.paginator;

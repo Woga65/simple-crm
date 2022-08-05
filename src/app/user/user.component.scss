@@ -109,7 +109,8 @@ mat-card {
 }
 
 .data-table {
-    min-height: 100vh;
+    min-height: 50vh;
+    margin-bottom: calc(var(--font-size) * 4.9);
 }
 
 .mat-paginator {
