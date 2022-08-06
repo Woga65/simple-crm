@@ -9,9 +9,9 @@ import { catchError, retry, throwError } from 'rxjs';
 })
 export class PlzService {
 
-  localHost = true;
+  corsProxy = true;
 
-  corsAnywhereUrl: string = this.localHost ? 'https://cors-anywhere.herokuapp.com/' : '';
+  corsAnywhereUrl: string = this.corsProxy ? 'https://cors-anywhere.herokuapp.com/' : 'https://robwu.nl/';
   plzServerUrl: string = this.corsAnywhereUrl + 'https://www.postdirekt.de/plzserver/PlzAjaxServlet';
 
 
