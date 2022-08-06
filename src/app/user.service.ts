@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { User } from 'src/models/user.class';
 import { Firestore, collectionData, collection, CollectionReference } from '@angular/fire/firestore';
-import { DocumentData, getFirestore, onSnapshot, getDoc, setDoc, updateDoc, deleteDoc, doc } from '@angular/fire/firestore';
+import { DocumentData, onSnapshot, getDoc, setDoc, updateDoc, deleteDoc, doc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  coll;
+  coll: CollectionReference<DocumentData>;
 
   constructor(private firestore: Firestore) {
     this.coll = collection(this.firestore, 'users');
