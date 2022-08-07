@@ -9,14 +9,30 @@ import { catchError, retry } from 'rxjs/operators';
 })
 export class PlzService {
 
-  corsProxy = true;
+  corsProxy = false;
 
-  corsAnywhereUrl: string = this.corsProxy ? 'https://cors-anywhere.herokuapp.com/' : '';
+  corsAnywhereUrl: string = this.corsProxy ? 'https://cors-anywhere.herokuapp.com/' : 'https://www.tanzschule-angermann.de/diepost/diepost.php?csurl=';
   plzServerUrl: string = this.corsAnywhereUrl + 'https://www.postdirekt.de/plzserver/PlzAjaxServlet';
 
 
   constructor(private http: HttpClient) { }
 
+
+  getPostalData(by = 'postcode', plz:string, city:string, street: string) {
+    switch (by.toLowerCase()) {
+      case 'postcode':
+      case 'zipcode':
+      case 'plz':
+        return this.getCityByPostCode(plz || '36093');
+      case 'city':
+      case 'town':
+        return this.getStreetByCity(plz || '360', city || 'Künzell');
+      case 'street':
+      case 'road':
+        return this.getPostCodeByAddress(plz, city || 'ful', street || 'dal');
+    }
+    return this.getCityByPostCode(plz || '34117');
+  }
 
   getPostCodeByAddress(plz = '34', city = 'kassel', street = 'frankfurter str. 45') {
     const options = {

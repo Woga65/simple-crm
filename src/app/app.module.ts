@@ -23,6 +23,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 // Material Date localisation
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -77,6 +78,7 @@ import { UserDetailsComponent } from './user-details/user-details.component';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatAutocompleteModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),

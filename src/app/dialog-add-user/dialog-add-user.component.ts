@@ -5,7 +5,9 @@ import { User } from 'src/models/user.class';
 import { UserService } from '../user.service';
 import { LangService } from '../lang.service';
 import { PlzService, Plz, PlzRow } from '../plz.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-dialog-add-user',
@@ -13,6 +15,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./dialog-add-user.component.scss']
 })
 export class DialogAddUserComponent implements OnInit, OnDestroy {
+  private componentIsDestroyed$ = new Subject<boolean>();
 
   currentLang: number = 0;
   languages: string[] = ['en-US', 'de', 'en-gb'];
@@ -22,7 +25,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   birthDate: Date = new Date;
   userExists: boolean = false;
 
-  plzData$: Subscription | any;
+  plzData$: Subscription | Observable<Plz[]> | any; // | Plz[];
   plzData: PlzRow[] = [];
 
 
@@ -46,12 +49,14 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     this.currentLang = this.currentLang < 0 ? 0 : this.currentLang;
     this._locale = this.languages[this.currentLang];
     this._adapter.setLocale(this._locale);
-    this.plzData$ = this.getPlzServerData();
+    this.plzData$ = this.getPostalDataBy('plz');
   }
-
+  
 
   ngOnDestroy() {
-    this.plzData$.unsubscribe();
+    this.componentIsDestroyed$.next(true);
+    this.componentIsDestroyed$.complete();
+    //this.plzData$.unsubscribe();
   }
 
 
@@ -95,7 +100,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
 
   closeDialog(state: string = '') {
-    this.plzData$.unsubscribe();
+    //this.plzData$.unsubscribe();
     this.dialogRef.close({ state: state, lang: this._locale, user: this.user });
   }
 
@@ -112,11 +117,22 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   }
 
 
-  getPlzServerData(plz = '34', city = 'kassel', street = 'kölnische str 114'):Subscription {
-      return this.plzService.getPostCodeByAddress(plz, city, street).subscribe((data:Plz) => {
-        this.plzData = data.rows || [];
+  getPostalDataBy(by: string) {
+    return this.plzService.getPostalData(by, this.user.zipCode, this.user.city, this.user.street)
+      .pipe(
+        takeUntil(this.componentIsDestroyed$),
+        map(data => this.filterPlzData(data.rows || []))
+      )
+      .subscribe((data: PlzRow[]) => {
+        this.plzData = data || [];                //this.plzData = this.filterPlzData(data.rows);
         console.log('plzData: ', this.plzData);
       });
+  }
+
+  filterPlzData(data:PlzRow[]): PlzRow[] {
+    return data.filter((d, i) =>
+      data.findIndex((v) =>
+        v.street == d.street && v.plz == d.plz && d.city == v.city) == i);
   }
 
 }
@@ -138,26 +154,26 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   }
 */
 
-  /*
-  getPlz1() {
-    const url = 'https://diepost...bla bla';
-    fetch(url)
-      .then(res => res.json())
-      .catch((err) => ({error: err}))
-      .then(res => this.plzData = res);
-  }
+/*
+getPlz1() {
+  const url = 'https://diepost...bla bla';
+  fetch(url)
+    .then(res => res.json())
+    .catch((err) => ({error: err}))
+    .then(res => this.plzData = res);
+}
 
-  async getPlz2() {
-    const url = 'https://diepost...bla bla';
-    const [resp, err] = await this.resolve(fetch(url));
-    return await resp ? resp.json() : err;
+async getPlz2() {
+  const url = 'https://diepost...bla bla';
+  const [resp, err] = await this.resolve(fetch(url));
+  return await resp ? resp.json() : err;
+}
+ 
+async resolve(p: any) {
+  try {
+    return [await p, null];
   }
-  
-  async resolve(p: any) {
-    try {
-      return [await p, null];
-    }
-    catch (e)  {
-      return [null, e];
-    }
-  }*/
+  catch (e)  {
+    return [null, e];
+  }
+}*/

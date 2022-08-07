@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { User } from 'src/models/user.class';
 import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
 import { MatPaginator } from '@angular/material/paginator';
@@ -17,6 +17,7 @@ import { UserService } from '../user.service';
   styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
+  private componentIsDestroyed$ = new Subject<boolean>();
 
   user: User = new User();
   users$: Observable<object[]>;
@@ -36,6 +37,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(public dialog: MatDialog, public userService: UserService) {  //, private _liveAnnouncer: LiveAnnouncer) {
     this.users$ = this.userService.getUserList();
     this.users$.pipe(
+      takeUntil(this.componentIsDestroyed$),
       map(usr => this.userBirthDateToString(usr))
     ).subscribe(userData => {                                     //  this.users$.subscribe(userData => {
       console.log('Neue Daten sind verfügbar: ', userData);
@@ -57,7 +59,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.tableObserver.disconnect();
+    this.componentIsDestroyed$.next(true);
+    this.componentIsDestroyed$.complete();
   }
 
 
