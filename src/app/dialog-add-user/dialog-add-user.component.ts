@@ -112,15 +112,33 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   }
 
 
-  getPlzServerData(plz = '34', city = 'kassel', street = 'kölnische str 114', finda = 'plz'):Subscription {
-      return this.plzService.getPostCodeByAddress(plz, city, street, finda).subscribe((data:Plz) => {
-      this.plzData = data.rows || [];
-      console.log('plzData: ', this.plzData);
-    });
+  getPlzServerData(plz = '34', city = 'kassel', street = 'kölnische str 114'):Subscription {
+      return this.plzService.getPostCodeByAddress(plz, city, street).subscribe((data:Plz) => {
+        this.plzData = data.rows || [];
+        console.log('plzData: ', this.plzData);
+      });
   }
 
+}
 
-  
+
+
+/*
+  import { DomSanitizer } from '@angular/platform-browser';
+  ...
+  constructor (public sanitizer: DomSanitizer) {}
+
+  sanitizeUser() {
+    const user:any = this.user;
+    for (const prop in user)
+      user[prop] = Number.isInteger(user[prop]) ?
+        user[prop] : 
+        this.sanitizer.sanitize(SecurityContext.HTML, user[prop]);
+    this.user = new User(user);
+  }
+*/
+
+  /*
   getPlz1() {
     const url = 'https://diepost...bla bla';
     fetch(url)
@@ -142,22 +160,4 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     catch (e)  {
       return [null, e];
     }
-  }
-
-}
-
-
-/*
-  import { DomSanitizer } from '@angular/platform-browser';
-  ...
-  constructor (public sanitizer: DomSanitizer) {}
-
-  sanitizeUser() {
-    const user:any = this.user;
-    for (const prop in user)
-      user[prop] = Number.isInteger(user[prop]) ?
-        user[prop] : 
-        this.sanitizer.sanitize(SecurityContext.HTML, user[prop]);
-    this.user = new User(user);
-  }
-*/
+  }*/
