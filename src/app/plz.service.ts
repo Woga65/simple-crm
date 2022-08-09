@@ -18,20 +18,27 @@ export class PlzService {
   constructor(private http: HttpClient) { }
 
 
-  getPostalData(by = 'postcode', plz:string, city:string, street: string) {
+  getPostalData(by = 'postcode', plz:string, city:string, street: string, _locale: string) {
+    if (_locale != 'de') {
+      return this.getCityByPostCode('99999');
+    }
     switch (by.toLowerCase()) {
       case 'postcode':
       case 'zipcode':
       case 'plz':
-        return this.getCityByPostCode(plz || '36093');
+        return this.getCityByPostCode(plz);
       case 'city':
       case 'town':
-        return this.getStreetByCity(plz || '360', city || 'Künzell');
+        return this.getStreetByCity(plz, city);
       case 'street':
       case 'road':
-        return this.getPostCodeByAddress(plz, city || 'ful', street || 'dal');
+      case 'address':
+        if (city.length > 2 && street.length > 2) {
+          return this.getPostCodeByAddress(plz, city, street);
+        }
+        return this.getCityByPostCode(plz ? plz : '99999');
     }
-    return this.getCityByPostCode(plz || '34117');
+    return this.getCityByPostCode(plz);
   }
 
   getPostCodeByAddress(plz = '34', city = 'kassel', street = 'frankfurter str. 45') {
