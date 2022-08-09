@@ -165,8 +165,8 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     return this.plzService.getPostalData(by, this.user.zipCode, this.user.city, this.user.street, this._locale)
       .pipe(
         takeUntil(this.componentIsDestroyed$),
-        map(data => this.filterPlzData(data.rows || [])),
-        map(data => this.filterPostalData(data, value, by))
+        map(data => this.filterPlzData(data?.rows || [])),
+        map(data => this.filterPostalData(data || [], value, by))
       );
   }
 
