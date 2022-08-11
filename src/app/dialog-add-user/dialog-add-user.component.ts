@@ -58,7 +58,11 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     this.user = new User(this.data.user);
     this.userExists = this.user.id ? true : false;
     this.birthDate = new Date(this.user.birthDate);
-  }
+    //
+    this.dialogRef.backdropClick()
+    .pipe(takeUntil(this.componentIsDestroyed$))
+    .subscribe(e => console.log('backdrop click: ', e));
+ }
 
 
   ngOnInit(): void {

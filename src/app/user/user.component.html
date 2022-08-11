@@ -49,6 +49,12 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
         <td mat-cell *matCellDef="let user"> {{user.street}}, {{user.zipCode}} {{user.city}} </td>
     </ng-container>
+      
+    <!-- Marker Column -->
+    <ng-container matColumnDef="marker">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> M </th>
+      <td mat-cell *matCellDef="let user"> {{user.marker?.charAt(1) || ''}} </td>
+    </ng-container>
   
     <!-- Header Row -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
