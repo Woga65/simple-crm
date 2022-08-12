@@ -64,7 +64,7 @@
 
     <!-- Data Rows -->
       <tr tabindex="1" mat-row *matRowDef="let row; let i=index; columns: displayedColumns;" id="row-{{i}}"
-        (click)="editUser(row.id)" (keydown)="checkKeys($event, row.id, i)">
+        (click)="changedRowId='row-'+ i; editUser(row.id)" (keydown)="checkKeys($event, row.id, i)">
       </tr>
     </table>
   </div>  

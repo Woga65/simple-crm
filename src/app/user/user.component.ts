@@ -67,7 +67,6 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
 
   async editUser(userId: string) {
-    console.log('user:', userId);
     await this.getUser(userId);
     this.openDialog(this.user);
   }
@@ -184,7 +183,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
       return;
     }
     if (!modifier) {
-      this.getValidActions(pg).forEach(k => e.code == k.key ? k.callback(id, el, pg, row, e) : false);
+      this.getValidActions(pg).forEach(k => e.code == k.key ? k.callback(id, row, el, pg, e) : false);
     }
   }
 
@@ -204,26 +203,26 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     ];
   }
 
-  private edit(userId: string, el: any, pg: any, row: number, e: any) {
+  private edit(userId: string, row: number) {
     this.changedRowId = `row-${row}`;
     this.editUser(userId);
   }
 
-  private prevRow(a: any, el: any, b: any, r: number, ev: any) {
-    if (r > 4) ev.preventDefault();
+  private prevRow(id: any, row: number, el: any, pg: any, ev: any) {
+    if (row > 4) ev.preventDefault();
     el.prev ? el.prev.focus() : el.last.focus();
   }
 
-  private nextRow(a: any, el: any, b: any, r: number, ev: any) {
-    if (r < 4) ev.preventDefault();
+  private nextRow(id: any, row: number, el: any, pg: any, ev: any) {
+    if (row < 4) ev.preventDefault();
     el.next ? el.next.focus() : el.first.focus();
   }
 
-  private prevPage(a: any, b: any, pg: any) {
+  private prevPage(id: any, row: any, el: any, pg: any) {
     pg.hasPreviousPage() ? pg.previousPage() : pg.lastPage();
   }
 
-  private nextPage(a: any, b: any, pg: any) {
+  private nextPage(id: any, row: any, el: any, pg: any) {
     pg.hasNextPage() ? pg.nextPage() : pg.firstPage();
   }
 
