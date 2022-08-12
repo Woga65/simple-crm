@@ -186,10 +186,8 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     console.log('by: ', by, 'plz: ', this.user.zipCode, 'city: ', this.user.city);
     switch (by) {
       case 'postcode': case 'zipcode': case 'plz':
-        console.log('data', data, 'v: ', value);
         return data.filter(v => v.city?.toLowerCase().startsWith(value.toLowerCase()));
       case 'city': case 'town':
-        console.log('data', data, 'v: ', value);
         return data.filter(v => v.street?.toLowerCase().startsWith(value.toLowerCase()));
       case 'street': case 'road': case 'address':
         return data.filter(v => v.plz?.toLowerCase().startsWith(value.toLowerCase()));
