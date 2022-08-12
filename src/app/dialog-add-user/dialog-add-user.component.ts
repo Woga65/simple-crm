@@ -57,7 +57,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     this.data = this.data || {};
     this.user = new User(this.data.user);
     this.userExists = this.user.id ? true : false;
-    this.birthDate = new Date(this.user.birthDate);
+    this.userExists ? this.birthDate = new Date(this.user.birthDate) : this.birthDate = new Date('1990-01-01');
     //
     this.dialogRef.backdropClick()
     .pipe(takeUntil(this.componentIsDestroyed$))
