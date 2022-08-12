@@ -17,6 +17,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss']
 })
+
 export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
   private componentIsDestroyed$ = new Subject<boolean>();
   private dataFilterChanged$ = new Subject<boolean>();
@@ -34,6 +35,10 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   changedRowId: string = '';
   dialogLostFocus: boolean = false;
   filterValue: string = '';
+
+  // the letters available for marking a data record using the mouse   
+  // if using the keyboard, the letters A-Z plus Space are available
+  markers: string = ' ABCD';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort = new MatSort();
@@ -151,6 +156,23 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     });
   }
 
+
+  /**
+   * Mark a data record with a single letter 
+   * by clicking the marker-column
+   * 
+   * @param { string } userId - the user's Id 
+   * @param { string } m - the letter, the user was marked before 
+   * @param { number } row - the nomber of the row that has been clicked 
+   * @param { Event } ev - mouse event 
+   */
+  markUserByMouse(userId: string, m:string, row: number, ev:any) {
+    ev.stopPropagation();
+    const mIndex = this.markers.indexOf(m) == -1 ? 0 : this.markers.indexOf(m);
+    const marker = mIndex < this.markers.length - 1 ? this.markers.charAt(mIndex + 1) : this.markers.charAt(0);
+    this.changedRowId = `row-${row}`;
+    this.markUser(userId, marker);
+  }
 
 
   /*****************************
