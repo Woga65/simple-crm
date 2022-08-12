@@ -21,6 +21,7 @@
         <mat-label>{{ localize().lastName.text || 'Last Name' }}</mat-label>
         <input  [disabled]="loading"
                 [(ngModel)]="user.lastName"
+                [formControl]="requiredformControls[0]"
                 matInput
                 required
                 placeholder="{{ localize().lastName.placeholder || 'Doe' }}">

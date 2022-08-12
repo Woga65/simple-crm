@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { User } from 'src/models/user.class';
 import { UserService } from '../user.service';
 import { LangService } from '../lang.service';
@@ -18,6 +18,8 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 })
 export class DialogAddUserComponent implements OnInit, OnDestroy {
   private componentIsDestroyed$ = new Subject<boolean>();
+
+  requiredformControls = [new FormControl('', [Validators.required])];
 
   formControlPlz = new FormControl('');
   formControlCity = new FormControl('');
@@ -89,7 +91,9 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
       this.user.birthDate = new Date(this.birthDate).getTime();
       this.userExists ? this.updateUser() : this.addUser();
     } else {
+      this.requiredformControls.forEach(fc => fc.markAsTouched());
       console.log('Empty user data not written!');
+      //console.log(this.requiredformControls[0].invalid);
     }
   }
 
