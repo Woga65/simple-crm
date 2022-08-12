@@ -10,7 +10,10 @@
 <div class="filter-container">
   <!-- <label class="filter-input input-label" *ngIf="true">Filter:</label> -->
   <input tabindex="1" class="filter-input input-field" type="text" placeholder="Filter ..." 
-    (keyup)="applyFilter($event)" (focus)="tableObserver.disconnect()" (blur)="tableObserver = observeUserTable()">
+    (keyup)="applyFilter($event)" 
+    (click)="filterInputClicked($event)" 
+    (focus)="tableObserver.disconnect()" 
+    (blur)="tableObserver = observeUserTable()">
 </div>
 
 
