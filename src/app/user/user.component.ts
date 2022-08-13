@@ -7,7 +7,7 @@ import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.compo
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
-import { UserService } from '../user.service';
+import { UserService } from '../services/user.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 //import { SelectionModel } from '@angular/cdk/collections';
 
