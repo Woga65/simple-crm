@@ -110,13 +110,13 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
       console.log('Neue Daten sind verfügbar: ', userData);
       this.users = this.filterUserData(userData, this.filterValue);
       this.dataSource = new MatTableDataSource(this.users);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
       this.dataSource.sortingDataAccessor = ((row:User, name:string) => {
         return (name == 'marker' && !row.marker)
-          ? ( this.dataSource.sort.direction == 'asc' ? 'z' : ' ' ) 
+          ? ( this.dataSource.sort.direction == 'asc' ? '=z' : '= ' ) 
           : row[name as keyof User];
       });
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
     });
   }
 
