@@ -94,9 +94,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
   openDialog(user: User = new User) {
     this.dialogLostFocus = false;
-    const dialogRef = this.dialog.open(DialogAddUserComponent, { data: { user: user } });
+    const dialogRef = this.dialog.open(DialogAddUserComponent, { data: { user: user }, disableClose: true });
     dialogRef.afterClosed().subscribe(res => {
-      console.log('res: ', res);
+      if (res) console.log('res: ', res);
       this.dialogLostFocus = true;
     });
   }

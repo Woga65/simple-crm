@@ -61,9 +61,16 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     this.userExists = this.user.id ? true : false;
     this.userExists ? this.birthDate = new Date(this.user.birthDate) : this.birthDate = new Date('1990-01-01');
     //
-    this.dialogRef.backdropClick()
-    .pipe(takeUntil(this.componentIsDestroyed$))
-    .subscribe(e => console.log('backdrop click: ', e));
+    if (!this.dialogRef.disableClose) {
+      this.dialogRef.backdropClick()
+        .pipe(takeUntil(this.componentIsDestroyed$))
+        .subscribe(e => this.onNoClick());
+      this.dialogRef.keydownEvents()
+        .pipe(takeUntil(this.componentIsDestroyed$))
+        .subscribe(e => {
+          if (e.key == 'Escape') this.onNoClick();
+        });
+    }  
  }
 
 
