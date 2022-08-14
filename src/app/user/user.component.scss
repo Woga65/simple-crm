@@ -31,17 +31,8 @@ mat-card {
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
-
-    /*mat-card-title {
-        color: rgba(0, 0, 0, 0.87);
-        font-size: calc(var(--font-size) * 1.0);
-        margin-bottom: calc(var(--font-size) * 1.1);
-        padding-left: calc(var(--font-size) * 1.1);
-        padding-right: calc(var(--font-size) * 1.1);
-    }*/
 }
 
-//.mat-elevation-z8 table {
 .data-table table {
     width: 100%;
 
@@ -51,17 +42,20 @@ mat-card {
     }
 
     .user-col-2 {
-        width: 16.67%;
+        width: 15%;
     }
 
     .user-col-3 {
-        width: 30.0%;
+        width: 16.67%;
     }
 
     .user-col-4 {
-        width: 33.33%;
+        width: 30.0%;
     }
 
+    .user-col-5 {
+        width: 33.33%;
+    }
 
     td {
         text-align: start;
@@ -72,15 +66,23 @@ mat-card {
         padding-bottom: calc(var(--font-size) * 0.5);
     }
 
+    th, td {
+        padding-left: calc(var(--font-size) * 0.5);
+    }
+
     th:first-child,
     td:first-child {
-        padding-left: 1.1rem;
+        padding-left: calc(var(--font-size) * 1.1);
     }
 
     th:last-child,
     td:last-child {
-        padding-right: 1.1rem;
-        padding-left: 1.1rem;
+        padding-right: calc(var(--font-size) * 1.1);
+        padding-left: calc(var(--font-size) * 1.1);
+    }
+
+    .mat-header-cell {
+        line-height: calc(var(--font-size) * 0.95);
     }
 
     .mat-cell,
@@ -113,6 +115,7 @@ mat-card {
     min-height: 50vh;
     margin-bottom: calc(var(--font-size) * 4.9);
 }
+
 
 .mat-paginator {
     min-width: max-content;

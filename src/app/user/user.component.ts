@@ -26,7 +26,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   users$: Observable<User[]>;
   users: User[] = [];
 
-  displayedColumns: string[] = ['position', 'lastName', 'eMail', 'city', 'marker'];
+  displayedColumns: string[] = ['position', 'firstName', 'lastName', 'eMail', 'city', 'marker'];
   dataSource: any;    // MatTableDataSource
 
   pageIndex: number = 0;
