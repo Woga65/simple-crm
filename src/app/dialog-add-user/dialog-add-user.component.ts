@@ -65,12 +65,12 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
       this.dialogRef.backdropClick()
         .pipe(takeUntil(this.componentIsDestroyed$))
         .subscribe(e => this.onNoClick());
-      this.dialogRef.keydownEvents()
-        .pipe(takeUntil(this.componentIsDestroyed$))
-        .subscribe(e => {
-          if (e.key == 'Escape') this.onNoClick();
-        });
-    }  
+    }
+    this.dialogRef.keydownEvents()
+      .pipe(takeUntil(this.componentIsDestroyed$))
+      .subscribe(e => {
+        if (e.key == 'Escape') this.onNoClick();
+      });
  }
 
 
