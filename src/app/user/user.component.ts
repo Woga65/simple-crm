@@ -286,7 +286,6 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     const table: HTMLTableElement | any = document.querySelector('table');
     const options = { childList: true, subtree: true };
     const callback = (mutationList: any[]) => {  //the second parameter (= observer instance) is not needed here
-      this.dataSource.sort = this.sort;
       const addedRow = this.getAddedRow(mutationList);
       const removedRow = this.getRemovedRow(mutationList);
       this.firstTableRow = this.getfirstRow(mutationList) || this.firstTableRow;
