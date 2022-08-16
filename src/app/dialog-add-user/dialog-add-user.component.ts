@@ -75,6 +75,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this._locale = this.data.lang ? this.data.lang : this._locale;
     this.currentLang = this.languages.indexOf(this._locale);
     this.currentLang = this.currentLang < 0 ? 0 : this.currentLang;
     this._locale = this.languages[this.currentLang];

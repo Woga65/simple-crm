@@ -1,7 +1,7 @@
 <?php
-
 header('Content-type: application/json;charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+header('Access-Control-Max-Age: 86400');    // cache for 1 day
 /**
  * AJAX Cross Domain (PHP) Proxy 0.8
  * Copyright (C) 2016 Iacovos Constantinou (https://github.com/softius)
@@ -32,7 +32,7 @@ define('CSAJAX_FILTERS', true);
 define('CSAJAX_FILTER_DOMAIN', false);
 
 /**
- * Enables or disables Expect: 100-continue header. Some webservers don't 
+ * Enables or disables Expect: 100-continue header. Some webservers don't
  * handle this header correctly.
  * Recommended value: false
  */
@@ -149,7 +149,7 @@ $ch = curl_init($request_url);
 
 // Suppress Expect header
 if (CSAJAX_SUPPRESS_EXPECT) {
-    array_push($request_headers, 'Expect:'); 
+    array_push($request_headers, 'Expect:');
 }
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);   // (re-)send headers

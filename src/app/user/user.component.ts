@@ -1,5 +1,6 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, OnDestroy, AfterViewChecked } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { User } from 'src/models/user.class';
@@ -8,6 +9,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { UserService } from '../services/user.service';
+import { LangService } from '../services/lang.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 //import { SelectionModel } from '@angular/cdk/collections';
 
@@ -44,7 +46,13 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   @ViewChild(MatSort) sort = new MatSort();
 
 
-  constructor(public dialog: MatDialog, public userService: UserService, private _liveAnnouncer: LiveAnnouncer) {
+  constructor(public dialog: MatDialog, 
+    public userService: UserService,
+    private _liveAnnouncer: LiveAnnouncer,
+    public langService: LangService,
+    @Inject(MAT_DATE_LOCALE) private _locale: string,
+    ) {
+
     this.users$ = this.userService.getUserList() as Observable<User[]>;
   }
 
@@ -63,6 +71,11 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     this.componentIsDestroyed$.next(true);
     this.componentIsDestroyed$.complete();
     this.tableObserver.disconnect();
+  }
+
+
+  localize() {
+    return this.langService.getLocalFormat(this._locale);
   }
 
  
@@ -94,9 +107,12 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
   openDialog(user: User = new User) {
     this.dialogLostFocus = false;
-    const dialogRef = this.dialog.open(DialogAddUserComponent, { data: { user: user }, disableClose: true });
+    const dialogRef = this.dialog.open(DialogAddUserComponent, { data: { user: user, lang: this._locale }, disableClose: true });
     dialogRef.afterClosed().subscribe(res => {
-      if (res) console.log('res: ', res);
+      if (res) {
+        console.log('res: ', res);
+        this._locale = res.lang ? res.lang : this._locale;
+      }
       this.dialogLostFocus = true;
     });
   }

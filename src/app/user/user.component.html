@@ -38,25 +38,25 @@
    
     <!-- First Name Column -->
     <ng-container matColumnDef="firstName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> First Name </span> </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> {{localize().firstName.text || 'First Name'}} </span> </th>
       <td mat-cell *matCellDef="let user"> {{ user.firstName }} </td>
   </ng-container>
 
     <!-- Last Name Column -->
     <ng-container matColumnDef="lastName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> Last Name </span> </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> {{localize().table.fullName || 'Last Name'}} </span> </th>
         <td mat-cell *matCellDef="let user"> {{ user.lastName }} </td> <!--{{ user.firstName ? ', ' + user.firstName : '' }} </td>-->
     </ng-container>
   
     <!-- E-Mail Column -->
     <ng-container matColumnDef="eMail">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> E-Mail </span> </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> {{localize().table.eMail || 'E-Mail'}} </span> </th>
         <td mat-cell *matCellDef="let user"> {{user.eMail}} </td>
     </ng-container>
   
     <!-- Adress Column -->
     <ng-container matColumnDef="city">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> Address </span> </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> {{localize().table.address || 'Address'}} </span> </th>
         <td mat-cell *matCellDef="let user"> {{user.zipCode}} {{user.city}}, {{user.street}} </td>
     </ng-container>
       
