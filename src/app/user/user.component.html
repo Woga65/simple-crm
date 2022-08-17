@@ -8,9 +8,8 @@
 
 
 <div class="filter-container">
-  <!-- <label class="filter-input input-label" *ngIf="true">Filter:</label> -->
   <input tabindex="1" class="filter-input input-field" type="text" placeholder="Filter ..." 
-    (keyup)="applyFilter($event)" 
+    (keyup)="applyFilter($event); checkModifiedKeys($event, '', 0);" 
     (click)="filterInputClicked($event)" 
     (focus)="tableObserver.disconnect()" 
     (blur)="tableObserver = observeUserTable()">
@@ -72,7 +71,9 @@
 
     <!-- Data Rows -->
       <tr tabindex="1" mat-row *matRowDef="let row; let i=index; columns: displayedColumns;" id="row-{{i}}"
-        (click)="changedRowId='row-'+ i; editUser(row.id)" (keydown)="checkKeys($event, row.id, i)">
+        (click)="changedRowId='row-'+ i; editUser(row.id)"
+        (keydown)="checkKeys($event, row.id, i)"
+        (keyup)="checkModifiedKeys($event, row.id, i)">
       </tr>
     </table>
   </div>  

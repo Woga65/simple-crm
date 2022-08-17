@@ -214,7 +214,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     e.stopPropagation();
     if (this.letterKeyPressed(e.code) || umlaut) {
       e.preventDefault();
-      if (!umlaut) {
+      if (!umlaut && !modifier) {
         this.changedRowId = `row-${row}`;
         this.markUser(id, e.key);
       }
@@ -224,6 +224,15 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
       this.getValidActions(pg).forEach(k => e.code == k.key ? k.callback(id, row, el, pg, e) : false);
     }
   }
+
+  checkModifiedKeys(e: KeyboardEvent, id: any, row: any = 0) {
+    if (e.altKey && e.code == 'KeyN') {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      this.newUser();
+    }
+  }
+
 
   private letterKeyPressed(code: string) {
     return (code >= 'KeyA' && code <= 'KeyZ') || code == 'Space';
