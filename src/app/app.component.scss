@@ -55,14 +55,15 @@ mat-toolbar, mat-toolbar-row, .logo-container {
 
 .router-container {
     position: relative;
-    top: calc(var(--font-size) * 3.5);
+    top: calc(var(--font-size) * 0.0);
     padding-left: calc(var(--font-size) * 3.5);
     padding-right: calc(var(--font-size) * 3.5);
     padding-top: calc(var(--font-size) * 1.1);
 }
 
 .mat-toolbar {
-    position: fixed;
+    position: sticky;           // position fixed does not 
+    position: -webkit-sticky;   // work as expected on iOS
     top: 0;
-    z-index: 200;
+    z-index: 2;
 }

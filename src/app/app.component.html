@@ -1,5 +1,4 @@
 
-
 <mat-drawer-container class="mat-drawer-container" autosize>
 
   <mat-drawer #drawer class="sidenav" [(opened)]="navOpen" [mode]="navMode">
@@ -12,7 +11,7 @@
     </ul>
   </mat-drawer>
 
-  <div class="example-sidenav-content">
+  <div class="sidenav-content">
     <mat-toolbar color="primary">
       <mat-toolbar-row>
         <mat-icon class="menu-icon" (click)="drawer.toggle()" aria-hidden="false" aria-label="menu icon">
@@ -21,6 +20,7 @@
         <span>Simple CRM</span>
       </mat-toolbar-row>
     </mat-toolbar>
+
     <div class="router-container">
       <router-outlet></router-outlet>
     </div>
