@@ -198,18 +198,36 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     console.log('by: ', by, 'plz: ', this.user.zipCode, 'city: ', this.user.city);
     switch (by) {
       case 'postcode': case 'zipcode': case 'plz':
-        return data.filter(v => v.city?.toLowerCase().startsWith(value.toLowerCase()));
+        return data.filter(d => this.dataMatchesCity(d, value));
       case 'city': case 'town':
-        return data.filter(v => v.street?.toLowerCase().startsWith(value.toLowerCase()));
+        return data.filter(d => this.dataMatchesStreet(d, value));
       case 'street': case 'road': case 'address':
         return data.filter(v => v.plz?.toLowerCase().startsWith(value.toLowerCase()));
     }
     return [];
   }
 
+
+  private dataMatchesCity(data: PlzRow, value: string) {
+    const uCity = (this.user.city.toLowerCase().trim() || '');
+    const dCity = data.city?.toLowerCase();
+    const vCity = value.toLowerCase().trim();
+    return (uCity) 
+      ? dCity?.startsWith(vCity) && dCity?.startsWith(uCity) 
+      : dCity?.startsWith(vCity);
+  }
+
+
+  private dataMatchesStreet(data: PlzRow, value: string) {
+    const uStreet = (this.user.street.toLowerCase().trim() || '');
+    const dStreet = data.street?.toLowerCase();
+    const vStreet = value.toLowerCase().trim();
+    return (uStreet) 
+      ? dStreet?.startsWith(vStreet) && dStreet?.startsWith(uStreet) 
+      : dStreet?.startsWith(vStreet); 
+  }
+
 }
-
-
 
 /*
   import { DomSanitizer } from '@angular/platform-browser';

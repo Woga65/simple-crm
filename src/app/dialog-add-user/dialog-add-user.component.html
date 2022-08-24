@@ -59,7 +59,14 @@
         <input  [disabled]="loading"               
                 [(ngModel)]="user.zipCode"
                 matInput
-                placeholder="{{ localize().zipCode.placeholder || '10312' }}">     
+                [matAutocomplete]="autoPlz"
+                [formControl]="formControlPlz"
+                placeholder="{{ localize().zipCode.placeholder || '10312' }}">
+        <mat-autocomplete #autoPlz="matAutocomplete">
+          <mat-option *ngFor="let data of filteredPlzData | async" [value]="data.plz" (onSelectionChange)="user.city = data.city">
+            {{data.plz}} {{data.city}}
+          </mat-option>
+        </mat-autocomplete>     
         <!-- <mat-hint>please enter address</mat-hint> -->
       </mat-form-field>
 
@@ -71,11 +78,11 @@
                 [matAutocomplete]="autoCity"
                 [formControl]="formControlCity"
                 placeholder="{{ localize().town.placeholder || 'Staten Island, NY' }}">
-          <mat-autocomplete #autoCity="matAutocomplete">
-            <mat-option *ngFor="let data of filteredCityData | async" [value]="data.city" (onSelectionChange)="user.zipCode = data.plz">
-              {{data.plz}} {{data.city}}
-            </mat-option>
-          </mat-autocomplete>
+        <mat-autocomplete #autoCity="matAutocomplete">
+          <mat-option *ngFor="let data of filteredCityData | async" [value]="data.city" (onSelectionChange)="user.zipCode = data.plz">
+            {{data.plz}} {{data.city}}
+          </mat-option>
+        </mat-autocomplete>
         <!-- <mat-hint>please enter address</mat-hint> -->
       </mat-form-field>
     </div>
