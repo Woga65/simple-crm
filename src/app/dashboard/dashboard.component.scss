@@ -10,3 +10,9 @@
         text-align: center;
     }
 }
+
+@media (max-width: 800px) {
+    .charts-container {
+        flex-direction: column;
+    }
+}
