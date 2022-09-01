@@ -1,1 +1,27 @@
-<p>dashboard works!</p>
+<h1>Dashboard</h1>
+
+<div class="charts-container">
+
+    <div style="width: 45%;">
+        <h2>Ages</h2>
+        <canvas baseChart
+            [type]="'doughnut'" 
+            [legend]="true" 
+            [datasets]="ageChartData"
+            [labels]="ageChartLabels"
+            [options]="ageChartOptions">
+        </canvas>
+    </div>
+
+    <div style="width: 45%">
+        <h2>Categories</h2>
+        <canvas baseChart
+            [type]="'doughnut'"
+            [legend]="true"
+            [datasets]="markChartData"
+            [labels]="markChartLabels"
+            [options]="ageChartOptions">
+        </canvas>
+    </div>
+
+</div>

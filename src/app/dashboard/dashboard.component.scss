@@ -1,0 +1,12 @@
+.charts-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 48px;
+
+    h2 {
+        text-align: center;
+    }
+}

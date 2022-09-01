@@ -51,7 +51,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     private _liveAnnouncer: LiveAnnouncer,
     public langService: LangService,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
-    ) {
+  ) {
 
     this.users$ = this.userService.getUserList() as Observable<User[]>;
   }
@@ -167,7 +167,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
   userBirthDateToString(user: User[]): User[] {
     return user.map(u => {
-      u.birthDate = new Date(u.birthDate).toLocaleDateString();
+      u.birthDate = u.birthDate ? new Date(u.birthDate).toLocaleDateString() : '';
       return u;
     });
   }

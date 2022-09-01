@@ -35,7 +35,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   loading: boolean = false;
 
   user: User = new User();
-  birthDate: Date = new Date;
+  birthDate: Date | any = new Date;
   userExists: boolean = false;
 
   plzData$: Subscription | Observable<Plz[]> | any; // | Plz[];
@@ -59,7 +59,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     this.data = this.data || {};
     this.user = new User(this.data.user);
     this.userExists = this.user.id ? true : false;
-    this.userExists ? this.birthDate = new Date(this.user.birthDate) : this.birthDate = new Date('1990-01-01');
+    this.birthDate = this.user.birthDate ? new Date(this.user.birthDate) : '';
     //
     if (!this.dialogRef.disableClose) {
       this.dialogRef.backdropClick()
@@ -97,7 +97,13 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   saveUser() {
     if (this.user.hasData()) {
       this.user.birthDate = new Date(this.birthDate).getTime();
+      this.user.birthDate = !isNaN(this.user.birthDate) ? this.user.birthDate : 0;
       this.userExists ? this.updateUser() : this.addUser();
+
+      const diffMillies = Date.now() - new Date(this.user.birthDate).getTime();
+      const age = this.user.birthDate ? Math.abs(new Date(diffMillies).getUTCFullYear() - 1970) : 0;
+      console.log('age: ', age);
+
     } else {
       this.requiredformControls.forEach(fc => fc.markAsTouched());
       console.log('Empty user data not written!');

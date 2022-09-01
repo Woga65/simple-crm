@@ -42,6 +42,9 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 
+// Charts
+import { NgChartsModule } from 'ng2-charts';
+
 // Our Components
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
@@ -81,6 +84,7 @@ import { UserDetailsComponent } from './user-details/user-details.component';
     MatPaginatorModule,
     MatSortModule,
     MatAutocompleteModule,
+    NgChartsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
