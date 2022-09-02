@@ -5,7 +5,7 @@ import { map, takeUntil } from 'rxjs/operators';
 import { User } from 'src/models/user.class';
 import { UserService } from '../services/user.service';
 import { LangService } from '../services/lang.service';
-import { ChartOptions } from 'chart.js';
+import { ChartEvent, ChartOptions, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
@@ -44,6 +44,15 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ageChartOptions: ChartOptions = {
     responsive: true,
+    plugins: {
+      legend: {
+        onHover: e => e.native ? (e.native.target as HTMLElement).style.cursor = 'pointer' : false,
+        onLeave: e => e.native ? (e.native.target as HTMLElement).style.cursor = 'default' : false,
+        position: 'top', align: 'center',
+      },
+      
+    }
+
   };
 
 
@@ -76,7 +85,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   prepareUserStatistics(user: User[]): User[] {
     this.ages = new Array(100).fill(0);
-    this.markers = new Array(5).fill(0);
+    this.markers = new Array(6).fill(0);
     return user.map(u => {
       const age = this.calculateAge(u.birthDate);
       this.ages[age]++;
