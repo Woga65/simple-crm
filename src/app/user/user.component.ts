@@ -357,19 +357,3 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
 }
 
-
-  /*private getJustMarkedRow(ml:any[]): HTMLElement {
-    return ml.filter(m =>
-      m.addedNodes[0] && m.addedNodes[0].nodeName == 'TR' && m.addedNodes[0].id
-        ? m.addedNodes[0].id == this.changedRowId
-        : false
-    )[0]?.addedNodes[0] || null;
-  }*/
-
-  /*getUser(userId:string) {
-    const docRef = doc(this.coll, userId);
-    onSnapshot(docRef, doc => {
-      this.user = new User(doc.data() || {});
-      const dialogRef:any = this.dialog.open(DialogAddUserComponent, { data:{ user: this.user } });
-    });
-  }*/

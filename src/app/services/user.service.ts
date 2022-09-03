@@ -68,18 +68,3 @@ export class UserService {
     }
   }
 }
-
-
-  /*creatUser(user:User) {
-    return new Promise<any>((resolve, reject) => {
-      const newDocRef = doc(this.coll);
-      user.id = newDocRef.id;
-      setDoc(newDocRef, user.toJSON())
-        .then(
-          (response) => {
-          console.log(`${response} - New user successfully written to backend. id: ${newDocRef.id}, path: ${newDocRef.path}`);
-          },
-          (error) => reject(error)
-        );
-    });
-  }*/
