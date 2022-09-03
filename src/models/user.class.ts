@@ -7,7 +7,7 @@ export class User {
     street: string = '';
     zipCode: string = '';
     city: string = '';
-    marker?: string ='';
+    marker: string = '';
 
     constructor(obj: any = {}) {
         for (const prop in this)
@@ -15,7 +15,7 @@ export class User {
     }
     
     public toJSON() {
-        return { ...this };
+        return { ...this };     //Object.assign({}, this);
     }
     
     public hasData() {
@@ -23,18 +23,3 @@ export class User {
         return false;
     }
 }
-
-
-    /*
-    public toJSON() {
-        return Object.assign({}, this);
-    }
-    public toJSON() {
-        let json = '{';
-        for (const prop in this) {
-            if (prop.startsWith('_')) continue;
-            json += Number.isInteger(this[prop]) ? `"${prop}":${this[prop]},` : `"${prop}":"${this[prop]}",`; 
-        }
-        return JSON.parse(json.replace(/.$/,"}"));
-    }
-    */

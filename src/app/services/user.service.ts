@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { User } from 'src/models/user.class';
-import { Firestore, collectionData, collection, CollectionReference } from '@angular/fire/firestore';
-import { DocumentData, onSnapshot, getDoc, setDoc, updateDoc, deleteDoc, doc } from '@angular/fire/firestore';
+import { Firestore, collectionData, collection, CollectionReference, WhereFilterOp, Query, QueryConstraint, orderBy } from '@angular/fire/firestore';
+import { DocumentData, onSnapshot, getDoc, setDoc, updateDoc, deleteDoc, doc, query, where } from '@angular/fire/firestore';
+//import { query } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -25,18 +26,11 @@ export class UserService {
     return collectionData(this.coll);
   }
 
-  creatUser(user:User) {
-    return new Promise<any>((resolve, reject) => {
-      const newDocRef = doc(this.coll);
-      user.id = newDocRef.id;
-      setDoc(newDocRef, user.toJSON())
-        .then(
-          (response) => {
-          console.log(`${response} - New user successfully written to backend. id: ${newDocRef.id}, path: ${newDocRef.path}`);
-          },
-          (error) => reject(error)
-        );
-    });
+  selectFromUserWhere(field: keyof(User), operator: WhereFilterOp, value: any, order?: 'desc' | 'asc') {
+    return (
+      collectionData(query(this.coll, where(field, operator, value), orderBy(field, order))) ||
+      collectionData(query(this.coll, where(field, operator, value)))
+    );
   }
 
   async createUser(user:User) {
@@ -74,3 +68,18 @@ export class UserService {
     }
   }
 }
+
+
+  /*creatUser(user:User) {
+    return new Promise<any>((resolve, reject) => {
+      const newDocRef = doc(this.coll);
+      user.id = newDocRef.id;
+      setDoc(newDocRef, user.toJSON())
+        .then(
+          (response) => {
+          console.log(`${response} - New user successfully written to backend. id: ${newDocRef.id}, path: ${newDocRef.path}`);
+          },
+          (error) => reject(error)
+        );
+    });
+  }*/

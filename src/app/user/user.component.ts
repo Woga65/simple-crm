@@ -54,6 +54,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   ) {
 
     this.users$ = this.userService.getUserList() as Observable<User[]>;
+    //for testing queries:
+    //this.users$ = this.userService.selectFromUserWhere('marker', '>=', '=A', 'desc') as Observable<User[]>;
   }
 
 
