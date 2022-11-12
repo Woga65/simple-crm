@@ -6,8 +6,9 @@
       <img src="assets/img/logo.png" alt="">
     </div>
     <ul class="menue-items">
-      <li routerLink="/dashboard" routerLinkActive="router-link-active"><mat-icon>fact_check</mat-icon>Dashboard</li>
+      <li *ngIf="!fromChild" routerLink="/dashboard" routerLinkActive="router-link-active"><mat-icon>fact_check</mat-icon>Dashboard</li>
       <li routerLink="/user" routerLinkActive="router-link-active"><mat-icon>perm_identity</mat-icon>User</li>
+      <li *ngIf="fromChild">vom Kind</li> <!-- just for testing -->
     </ul>
   </mat-drawer>
 
@@ -22,7 +23,7 @@
     </mat-toolbar>
 
     <div class="router-container">
-      <router-outlet></router-outlet>
+      <router-outlet (activate)="subscribeToEmitter($event)" (deactivate)="unsubscribe()"></router-outlet>
     </div>
   </div>
 

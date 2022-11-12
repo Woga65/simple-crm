@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, OnDestroy, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, OnDestroy, AfterViewChecked, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { Observable, Subject } from 'rxjs';
@@ -45,6 +45,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort = new MatSort();
 
+  showMapEvent = new EventEmitter(); //sibi
 
   constructor(public dialog: MatDialog, 
     public userService: UserService,
@@ -126,6 +127,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
       map(usr => this.userBirthDateToString(usr))
     ).subscribe(userData => {
       console.log('Neue Daten sind verfügbar: ', userData);
+      this.showMapEvent.emit({ fromUserList: false }); //sibi for testing/debugging
       this.users = this.filterUserData(userData, this.filterValue);
       this.dataSource = new MatTableDataSource(this.users);
       this.dataSource.sortingDataAccessor = ((row:User, name:string) => {
@@ -181,7 +183,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
    * 
    * @param { string } userId - the user's Id 
    * @param { string } m - the letter, the user was marked before 
-   * @param { number } row - the nomber of the row that has been clicked 
+   * @param { number } row - the number of the row that has been clicked 
    * @param { Event } ev - mouse event 
    */
   markUserByMouse(userId: string, m:string, row: number, ev:any) {
@@ -190,6 +192,20 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     const marker = mIndex < this.markers.length - 1 ? this.markers.charAt(mIndex + 1) : this.markers.charAt(0);
     this.changedRowId = `row-${row}`;
     this.markUser(userId, marker);
+  }
+
+
+  /**
+   * if the table row already was focussed, edit the user 
+   * represented by that specific table row. Otherwise
+   * move the focus to that specific row.
+   * 
+   * @param { string } userId - the user's Id
+   * @param { number } row - the number of the row that has been clicked
+   */
+  editUserByMouse(userId: string, row: number) {
+    if (this.changedRowId == `row-${row}`) this.editUser(userId);
+    this.changedRowId = `row-${row}`;
   }
 
 

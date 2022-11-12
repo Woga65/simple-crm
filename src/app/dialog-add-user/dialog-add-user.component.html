@@ -4,7 +4,7 @@
   <h1 mat-dialog-title>
     {{ userExists ? localize().update.title || 'Update user' : localize().form.title || 'Add user'}}
   </h1>
-  
+
   <div mat-dialog-content>
 
     <div>
@@ -34,7 +34,7 @@
         <mat-label>{{ localize().birthDate.text || 'Date of birth' }}</mat-label>
         <input  [disabled]="loading"
                 [(ngModel)]="birthDate"
-                matInput 
+                matInput
                 [matDatepicker]="dp">
         <mat-hint>{{ localize().birthDate.hint || ''}}</mat-hint>
         <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
@@ -43,8 +43,8 @@
 
       <mat-form-field appearance="outline">
         <mat-label>{{ localize().eMail.text || 'E-Mail' }}</mat-label>
-        <input  [disabled]="loading" 
-                [(ngModel)]="user.eMail" 
+        <input  [disabled]="loading"
+                [(ngModel)]="user.eMail"
                 matInput
                 pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
                 placeholder="{{ localize().eMail.placeholder || 'john@doe.com' }}">
@@ -56,7 +56,7 @@
     <div>
       <mat-form-field class="mr-16" appearance="outline">
         <mat-label>{{ localize().zipCode.text || 'Zip code' }}</mat-label>
-        <input  [disabled]="loading"               
+        <input  [disabled]="loading"
                 [(ngModel)]="user.zipCode"
                 matInput
                 [matAutocomplete]="autoPlz"
@@ -66,13 +66,13 @@
           <mat-option *ngFor="let data of filteredPlzData | async" [value]="data.plz" (onSelectionChange)="user.city = data.city">
             {{data.plz}} {{data.city}}
           </mat-option>
-        </mat-autocomplete>     
+        </mat-autocomplete>
         <!-- <mat-hint>please enter address</mat-hint> -->
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>{{ localize().town.text || 'Town' }}</mat-label>
-        <input  [disabled]="loading" 
+        <input  [disabled]="loading"
                 [(ngModel)]="user.city"
                 matInput
                 [matAutocomplete]="autoCity"
@@ -106,11 +106,11 @@
     </div>
 
   </div>
-  
+
   <div mat-dialog-actions class="add-user-buttons">
     <div>
       <button [disabled]="loading"
-              mat-button 
+              mat-button
               (click)="onNoClick()">
         {{ localize().form.cancel || 'Cancel' }}
       </button>

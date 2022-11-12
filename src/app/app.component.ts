@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDrawerMode } from '@angular/material/sidenav';
-
+import { Subscription } from 'rxjs';
+import { UserComponent } from './user/user.component';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,24 @@ export class AppComponent {
   navOpen: boolean = true;
   navMode: MatDrawerMode = 'side';
 
+  subscription!: Subscription;
+  fromChild: boolean = false;
+
   constructor() {}
+
+  subscribeToEmitter(componentRef:any) {
+    if (!(componentRef instanceof UserComponent)) return;
+    const child:UserComponent = componentRef;
+    this.subscription = child.showMapEvent.subscribe( (e:any) => {
+      console.log('e: ', e);      //a map showing the users address will go here 
+      this.fromChild = e['fromUserList']; 
+
+    });
+  }
+
+  unsubscribe() {
+    this.subscription.unsubscribe();
+  }
 }
 
 
