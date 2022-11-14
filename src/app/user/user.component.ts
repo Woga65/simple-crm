@@ -67,6 +67,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   ngAfterViewInit() {
     this.tableObserver = this.observeUserTable();
     this.initUsersList();
+    this.changedRowId = 'row-0';
   }
 
 
