@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { Map, Control, DomUtil, ZoomAnimEvent , Layer, MapOptions, tileLayer, latLng, LeafletEvent, ZoomAnimEventHandlerFn } from 'leaflet';
+import { Map, ZoomAnimEvent , MapOptions, tileLayer, latLng, LeafletEvent } from 'leaflet';
 
 
 @Component({
@@ -8,7 +8,7 @@ import { Map, Control, DomUtil, ZoomAnimEvent , Layer, MapOptions, tileLayer, la
   styleUrls: ['./osm-map.component.scss']
 })
 
-export class OsmMapComponent implements OnInit {
+export class OsmMapComponent implements OnInit, OnDestroy {
   @Output() map$: EventEmitter<Map> = new EventEmitter;
   @Output() zoom$: EventEmitter<number> = new EventEmitter;
   @Input() options: MapOptions = {
@@ -29,10 +29,10 @@ export class OsmMapComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.map.clearAllEventListeners;
     this.map.remove();
-  };
+  }
 
   onMapReady(map: Map) {
     this.map = map;
@@ -44,5 +44,9 @@ export class OsmMapComponent implements OnInit {
   onMapZoomEnd(e: LeafletEvent | ZoomAnimEvent) {   //ZoomAnimEvent | any
     this.zoom = e.target.getZoom();
     this.zoom$.emit(this.zoom);
+  }
+
+  onMapZoomStart(e: any) {
+    console.log('zoom: ', e);
   }
 }

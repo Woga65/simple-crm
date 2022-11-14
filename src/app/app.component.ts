@@ -25,6 +25,7 @@ export class AppComponent {
   geoData$!: Observable<GeoResult>;
   geoData: GeoResult = { spatialReference: {}, locations: [] };
   map!: Map;
+  zoom: number = 0;
   marker: any = null;
 
   constructor(public geocodeService: GeocodeService) {}
@@ -45,6 +46,10 @@ export class AppComponent {
 
   receiveMap(map: Map) {
     this.map = map;
+  }
+
+  receiveZoom(zoom: number) {
+    this.zoom = zoom;
   }
 
 
