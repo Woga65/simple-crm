@@ -45,7 +45,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort = new MatSort();
 
-  showMapEvent = new EventEmitter(); //sibi
+  showMapEvent = new EventEmitter();
 
   constructor(public dialog: MatDialog, 
     public userService: UserService,
@@ -127,7 +127,6 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
       map(usr => this.userBirthDateToString(usr))
     ).subscribe(userData => {
       console.log('Neue Daten sind verfügbar: ', userData);
-      this.showMapEvent.emit({ fromUserList: false }); //sibi for testing/debugging
       this.users = this.filterUserData(userData, this.filterValue);
       this.dataSource = new MatTableDataSource(this.users);
       this.dataSource.sortingDataAccessor = ((row:User, name:string) => {
@@ -174,6 +173,11 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
       u.birthDate = u.birthDate ? new Date(u.birthDate).toLocaleDateString() : '';
       return u;
     });
+  }
+
+
+  userFocussed(ev:any, userData: User, row: number) {
+    this.showMapEvent.emit({ fromUserList: true, data: userData });
   }
 
 

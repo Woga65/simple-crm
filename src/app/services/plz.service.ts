@@ -11,7 +11,7 @@ export class PlzService {
 
   corsProxy = false;
 
-  corsAnywhereUrl: string = this.corsProxy ? 'https://cors-anywhere.herokuapp.com/' : 'https://www.tanzschule-angermann.de/diepost/diepost.php?csurl=';
+  corsAnywhereUrl: string = this.corsProxy ? 'https://cors-anywhere.herokuapp.com/' : 'https://wolfgang-siebert.de/projects/simple-crm/diepost/diepost.php?csurl=';
   plzServerUrl: string = this.corsAnywhereUrl + 'https://www.postdirekt.de/plzserver/PlzAjaxServlet';
 
 

@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
 import { MatDrawerMode } from '@angular/material/sidenav';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { User } from 'src/models/user.class';
 import { UserComponent } from './user/user.component';
+import { GeocodeService, GeoResult } from './services/geocode.service';
+import { tap } from 'rxjs';
+import { Map, latLng, marker } from 'leaflet';
+
 
 @Component({
   selector: 'app-root',
@@ -15,22 +20,79 @@ export class AppComponent {
 
   subscription!: Subscription;
   fromChild: boolean = false;
+  userData: User = new User();
 
-  constructor() {}
+  geoData$!: Observable<GeoResult>;
+  geoData: GeoResult = { spatialReference: {}, locations: [] };
+  map!: Map;
+  marker: any = null;
+
+  constructor(public geocodeService: GeocodeService) {}
 
   subscribeToEmitter(componentRef:any) {
-    if (!(componentRef instanceof UserComponent)) return;
-    const child:UserComponent = componentRef;
-    this.subscription = child.showMapEvent.subscribe( (e:any) => {
-      console.log('e: ', e);      //a map showing the users address will go here 
-      this.fromChild = e['fromUserList']; 
-
-    });
+    if (!(componentRef instanceof UserComponent)) {
+      this.fromChild = false;
+      return;
+    }
+    this.subscription = this.geoLocationSubscription(componentRef);
   }
+
 
   unsubscribe() {
     this.subscription.unsubscribe();
   }
+
+
+  receiveMap(map: Map) {
+    this.map = map;
+  }
+
+
+  geoLocationSubscription(componentRef:any) {
+    const child:UserComponent = componentRef;
+    return child.showMapEvent.subscribe( (e:any) => {
+      this.fromChild = e['fromUserList'];
+      this.userData = new User(e['data']);
+      this.geoData$ = (this.geocodeService.getLocationByAddress(this.userData.zipCode, this.userData.city, this.userData.street) as Observable<GeoResult>)
+        .pipe( 
+          tap(geoData => this.geoData = this.showUsersLocation(geoData))
+        );
+    });
+  }
+
+
+  showUsersLocation(geoData:GeoResult) {
+    if (this.map) {
+      this.removePreviousMarker();
+      this.marker = this.markUserOnMap(geoData);
+      this.addUserInfoToMarker();
+    } 
+    return geoData;
+  }
+
+
+  removePreviousMarker() {
+    if (this.marker) this.map.removeLayer(this.marker);
+  }
+
+
+  markUserOnMap(geoData:GeoResult) {
+    const x = (geoData.locations[0]?.feature?.geometry?.x) || 0;
+    const y = (geoData.locations[0]?.feature?.geometry?.y) || 0;
+    this.map.setView(latLng(y, x), (x || y) ? 16 : 1);
+    return (geoData.locations.length) ? marker(latLng(y, x)).addTo(this.map) : null;
+  }
+
+
+  addUserInfoToMarker() {
+    if (this.marker) this.marker.bindTooltip(`${ this.userData.firstName } ${ this.userData.lastName }`, {
+      permanent: true, 
+      direction : 'bottom',
+      className: 'transparent-tooltip',
+      offset: [-16, 32]
+    });
+  }
+
 }
 
 

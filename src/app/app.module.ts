@@ -45,11 +45,15 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 // Charts
 import { NgChartsModule } from 'ng2-charts';
 
+// Leaflet
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+
 // Our Components
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
 import { DialogAddUserComponent } from './dialog-add-user/dialog-add-user.component';
 import { UserDetailsComponent } from './user-details/user-details.component';
+import { OsmMapComponent } from './osm-map/osm-map.component';
 
 
 @NgModule({
@@ -58,7 +62,8 @@ import { UserDetailsComponent } from './user-details/user-details.component';
     DashboardComponent,
     UserComponent,
     DialogAddUserComponent,
-    UserDetailsComponent
+    UserDetailsComponent,
+    OsmMapComponent
   ],
   imports: [
     BrowserModule,
@@ -85,6 +90,7 @@ import { UserDetailsComponent } from './user-details/user-details.component';
     MatSortModule,
     MatAutocompleteModule,
     NgChartsModule,
+    LeafletModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
