@@ -47,6 +47,6 @@ export class OsmMapComponent implements OnInit, OnDestroy {
   }
 
   onMapZoomStart(e: any) {
-    console.log('zoom: ', e);
+    //console.log('zoom: ', e);
   }
 }

@@ -70,6 +70,9 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.componentIsDestroyed$))
       .subscribe(e => {
         if (e.key == 'Escape') this.onNoClick();
+        if ((e.target as HTMLElement).id) {
+          console.log('Field: ', Number((e.target as HTMLElement).id.slice(10)), e.key, e.code);
+        }
       });
  }
 

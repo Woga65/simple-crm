@@ -21,13 +21,6 @@
         </app-osm-map>
       </div>
 
-      <div *ngIf="fromChild" style="margin-top: 10px;" style="display: none;">
-        <div *ngFor="let geo of (geoData$ | async)?.locations">
-          x: {{ geo.feature?.geometry?.x }}<br>
-          y: {{ geo.feature?.geometry?.y }}
-        </div>
-      </div> 
-
     </div>
 
   </mat-drawer>

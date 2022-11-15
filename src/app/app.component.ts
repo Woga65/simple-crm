@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { MatDrawerMode } from '@angular/material/sidenav';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscribable, Subscription } from 'rxjs';
 import { User } from 'src/models/user.class';
 import { UserComponent } from './user/user.component';
 import { GeocodeService, GeoResult } from './services/geocode.service';
-import { tap } from 'rxjs';
+import { tap, take } from 'rxjs';
 import { Map, latLng, marker } from 'leaflet';
 
 
@@ -18,12 +18,13 @@ export class AppComponent {
   navOpen: boolean = true;
   navMode: MatDrawerMode = 'side';
 
-  subscription!: Subscription;
+  subscription: Subscription = Subscription.EMPTY;
   fromChild: boolean = false;
   userData: User = new User();
 
-  geoData$!: Observable<GeoResult>;
+  geoData$: Subscription = Subscription.EMPTY;      // Observable<GeoResult> | Subscribable<GeoResult>;
   geoData: GeoResult = { spatialReference: {}, locations: [] };
+
   map!: Map;
   zoom: number = 0;
   marker: any = null;
@@ -40,7 +41,9 @@ export class AppComponent {
 
 
   unsubscribe() {
-    this.subscription.unsubscribe();
+    if (this.subscription && this.subscription != Subscription.EMPTY) {
+      this.subscription.unsubscribe();
+    }
   }
 
 
@@ -59,9 +62,8 @@ export class AppComponent {
       this.fromChild = e['fromUserList'];
       this.userData = new User(e['data']);
       this.geoData$ = (this.geocodeService.getLocationByAddress(this.userData.zipCode, this.userData.city, this.userData.street) as Observable<GeoResult>)
-        .pipe( 
-          tap(geoData => this.geoData = this.showUsersLocation(geoData))
-        );
+        .pipe(take(1))
+        .subscribe(geoData => this.geoData = this.showUsersLocation(geoData));
     });
   }
 
