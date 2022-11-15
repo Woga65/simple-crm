@@ -15,6 +15,7 @@
 
       <div class="osm-container" [ngStyle]="{'visibility': fromChild ? 'visible' : 'hidden'}">
         <app-osm-map
+          [center]="mapCenter"
           (map$)="receiveMap($event)"
           (zoom$)="receiveZoom($event)"
           id="main-map">

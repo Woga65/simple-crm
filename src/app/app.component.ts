@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { MatDrawerMode } from '@angular/material/sidenav';
-import { Observable, Subscribable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { User } from 'src/models/user.class';
 import { UserComponent } from './user/user.component';
 import { GeocodeService, GeoResult } from './services/geocode.service';
-import { tap, take } from 'rxjs';
-import { Map, latLng, marker } from 'leaflet';
+import { take } from 'rxjs';
+import { Map } from 'leaflet';
 
 
 @Component({
@@ -27,9 +27,10 @@ export class AppComponent {
 
   map!: Map;
   zoom: number = 0;
-  marker: any = null;
+  mapCenter = { x: 0, y: 0, z: 0, text: '' };
 
   constructor(public geocodeService: GeocodeService) {}
+
 
   subscribeToEmitter(componentRef:any) {
     if (!(componentRef instanceof UserComponent)) {
@@ -51,6 +52,7 @@ export class AppComponent {
     this.map = map;
   }
 
+
   receiveZoom(zoom: number) {
     this.zoom = zoom;
   }
@@ -70,50 +72,18 @@ export class AppComponent {
 
   showUsersLocation(geoData:GeoResult) {
     if (this.map) {
-      this.removePreviousMarker();
-      this.marker = this.markUserOnMap(geoData);
-      this.addUserInfoToMarker();
-    } 
+      this.mapCenter = this.getMapCenter(
+        (geoData.locations[0]?.feature?.geometry?.x) || 0, 
+        (geoData.locations[0]?.feature?.geometry?.y) || 0,
+        `${ this.userData.firstName } ${ this.userData.lastName }`.trim()
+      );
+    };
     return geoData;
   }
 
 
-  removePreviousMarker() {
-    if (this.marker) this.map.removeLayer(this.marker);
-  }
-
-
-  markUserOnMap(geoData:GeoResult) {
-    const x = (geoData.locations[0]?.feature?.geometry?.x) || 0;
-    const y = (geoData.locations[0]?.feature?.geometry?.y) || 0;
-    this.map.setView(latLng(y, x), (x || y) ? 16 : 1);
-    return (geoData.locations.length) ? marker(latLng(y, x)).addTo(this.map) : null;
-  }
-
-
-  addUserInfoToMarker() {
-    if (this.marker) this.marker.bindTooltip(`${ this.userData.firstName } ${ this.userData.lastName }`, {
-      permanent: true, 
-      direction : 'bottom',
-      className: 'transparent-tooltip',
-      offset: [-16, 32]
-    });
+  getMapCenter(x: number, y: number, text: string) {
+    return { x: x, y: y, z: x || y ? 16 : 1, text: text };
   }
 
 }
-
-
-//import { AngularFirestore } from '@angular/fire/compat/firestore';
-//import { Observable } from 'rxjs';
-
-//@Component({
-// ...  
-//})
-
-// export class AppComponent {}
-//items: Observable<any[]> | any;
-// ...
-
-  //constructor(firestore: AngularFirestore) {
-    //this.items = firestore.collection('items').valueChanges();
-  //}
