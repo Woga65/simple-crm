@@ -79,6 +79,15 @@ mat-toolbar, mat-toolbar-row, .logo-container {
     box-shadow: 1px 2px 12px 1px gray;
 }
 
+mat-toolbar .add-user-button {
+    margin-left: auto;
+    height: calc(var(--font-size) * 1.8);
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+
 @media screen and (min-width: 785px) {
     .router-container {
         padding-left: calc(var(--font-size) * 1.1);
@@ -87,6 +96,9 @@ mat-toolbar, mat-toolbar-row, .logo-container {
 }
 
 @media screen and (min-width: 885px) {
+    mat-toolbar .add-user-button {
+        margin-right: calc(var(--font-size) * 2.5);
+    }
     .router-container {
         padding-left: calc(var(--font-size) * 3.5);
         padding-right: calc(var(--font-size) * 3.5);

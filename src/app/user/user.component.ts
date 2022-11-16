@@ -178,7 +178,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
 
   userFocussed(ev:any, userData: User, row: number) {
-    this.showMapEvent.emit({ fromUserList: true, data: userData });
+    this.showMapEvent.emit({ data: userData });
   }
 
 

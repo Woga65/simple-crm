@@ -13,7 +13,7 @@
         <li routerLink="/user" routerLinkActive="router-link-active"><mat-icon>perm_identity</mat-icon>User</li>
       </ul>
 
-      <div class="osm-container" [ngStyle]="{'visibility': fromChild ? 'visible' : 'hidden'}">
+      <div class="osm-container" [ngStyle]="{'visibility': fromUserComponent ? 'visible' : 'hidden'}">
         <app-osm-map
           [center]="mapCenter"
           (map$)="receiveMap($event)"
@@ -33,6 +33,13 @@
             {{navMode == 'side' ? (navOpen ? 'arrow_back' : 'menu') : 'menu' }}
         </mat-icon>
         <span>Simple CRM</span>
+        <button *ngIf="userComponentLoaded" class="add-user-button" (click)="userComponent.newUser()"
+          mat-stroked-button
+          color="primary"
+          matTooltip="add user"
+          matTooltipPosition="below">
+              <mat-icon aria-hidden="false" aria-label="add address">person_add</mat-icon>
+        </button>
       </mat-toolbar-row>
     </mat-toolbar>
 

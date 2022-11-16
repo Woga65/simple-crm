@@ -19,7 +19,9 @@ export class AppComponent {
   navMode: MatDrawerMode = 'side';
 
   subscription: Subscription = Subscription.EMPTY;
-  fromChild: boolean = false;
+  userComponent: UserComponent | any = null; 
+  fromUserComponent: boolean = false;
+  userComponentLoaded: boolean = false;
   userData: User = new User();
 
   geoData$: Subscription = Subscription.EMPTY;      // Observable<GeoResult> | Subscribable<GeoResult>;
@@ -33,11 +35,12 @@ export class AppComponent {
 
 
   subscribeToEmitter(componentRef:any) {
-    if (!(componentRef instanceof UserComponent)) {
-      this.fromChild = false;
-      return;
+    this.userComponentLoaded = this.fromUserComponent = false;
+    if (componentRef instanceof UserComponent) {
+      this.userComponent = componentRef;
+      this.userComponentLoaded = true;
+      this.subscription = this.geoLocationSubscription();
     }
-    this.subscription = this.geoLocationSubscription(componentRef);
   }
 
 
@@ -58,10 +61,9 @@ export class AppComponent {
   }
 
 
-  geoLocationSubscription(componentRef:any) {
-    const child:UserComponent = componentRef;
-    return child.showMapEvent.subscribe( (e:any) => {
-      this.fromChild = e['fromUserList'];
+  geoLocationSubscription() {
+    return this.userComponent.showMapEvent.subscribe( (e:any) => {
+      this.fromUserComponent = this.userComponentLoaded = true; // e['fromUserList'];
       this.userData = new User(e['data']);
       this.geoData$ = (this.geocodeService.getLocationByAddress(this.userData.zipCode, this.userData.city, this.userData.street) as Observable<GeoResult>)
         .pipe(take(1))
