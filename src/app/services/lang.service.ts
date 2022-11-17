@@ -26,6 +26,7 @@ export class LangService {
 
   deFormat(): any {
     return {
+      age: 'J.', add: 'hinzufügen', stats: 'Statistik', users: 'Adressen',
       table: { title: 'Nutzerliste', fullName: 'Name', eMail: 'E-Mail', address: 'Adresse' },
       form: { title: 'Nutzer hinzufügen', cancel: 'abbrechen', save: 'speichern', lang: 'Deutsch (DE)' },
       update: { title: 'Nutzer bearbeiten', delete: 'löschen' },
@@ -41,6 +42,7 @@ export class LangService {
 
   usFormat(): any {
     return {
+      age: 'yo', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (US)' }, update: {}, firstName: {}, 
       lastName: {}, birthDate: { hint: 'MM/DD/YYYY' }, eMail: {},
       street: {}, zipCode: {}, town: {},
@@ -49,6 +51,7 @@ export class LangService {
 
   gbFormat(): any {
     return {
+      age: 'yo.', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (GB)' }, update: {}, firstName: { placeholder: 'John' }, 
       lastName: { placeholder: 'Smith' }, birthDate: { hint: 'DD/MM/YYYY' }, 
       eMail: { placeholder: 'john@smith.co.uk' }, street: { text: 'House No + Street',
@@ -59,6 +62,7 @@ export class LangService {
 
   jpFormat(): any {
     return {
+      age: 'yo.', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (JP)' }, update: {}, firstName: {},
       lastName: {}, birthDate: { hint: 'YYYY/MM/DD' }, eMail: {},
       street: {}, zipCode: {}, town: {},
@@ -67,6 +71,7 @@ export class LangService {
 
   defaultFormat(): any {
     return {
+      age: 'yo.', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (US)' }, update: {},
       firstName: {}, lastName: {}, birthDate: { hint: '' },
       eMail: {}, street: {}, zipCode: {}, town: {},

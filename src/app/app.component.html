@@ -9,8 +9,8 @@
     <div class="sidebar-container">
 
       <ul class="menue-items">
-        <li routerLink="/dashboard" routerLinkActive="router-link-active"><mat-icon>fact_check</mat-icon>Dashboard</li>
-        <li routerLink="/user" routerLinkActive="router-link-active"><mat-icon>perm_identity</mat-icon>User</li>
+        <li routerLink="/dashboard" routerLinkActive="router-link-active"><mat-icon>fact_check</mat-icon>{{ localize().stats || 'Dashboard' }}</li>
+        <li routerLink="/user" routerLinkActive="router-link-active"><mat-icon>perm_identity</mat-icon>{{ localize().users || 'User' }}</li>
       </ul>
 
       <div class="osm-container" [ngStyle]="{'visibility': fromUserComponent ? 'visible' : 'hidden'}">
@@ -20,6 +20,10 @@
           (zoom$)="receiveZoom($event)"
           id="main-map">
         </app-osm-map>
+      </div>
+
+      <div *ngIf="userComponentLoaded" class="user-details-container">
+        <app-user-details [userData]="userData" [lang]="lang"></app-user-details>
       </div>
 
     </div>
@@ -36,7 +40,7 @@
         <button *ngIf="userComponentLoaded" class="add-user-button" (click)="userComponent.newUser()"
           mat-stroked-button
           color="primary"
-          matTooltip="add user"
+          [matTooltip]="localize().add || 'add user'"
           matTooltipPosition="below">
               <mat-icon aria-hidden="false" aria-label="add address">person_add</mat-icon>
         </button>

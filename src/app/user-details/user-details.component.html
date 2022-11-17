@@ -1,38 +1,10 @@
-<mat-card class="user-details-header">
-    <img src="assets/img/profile.png" alt="">
-    <div class="user-text-container">
-        <div class="user-text">
-            <h2>{{ user.firstName }} {{ user.lastName }}</h2>
-            <span>{{ user.eMail }}</span>
-        </div>
-    </div>
-</mat-card>
 
-<mat-card class="user-details-body">
-    <button class="upper-right" mat-icon-button [matMenuTriggerFor]="menu" aria-label="icon button with a more icon">
-        <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="editAddressDialog();">
-          <mat-icon>edit</mat-icon>
-          <span>Edit</span>
-        </button>
-        <button mat-menu-item>
-          <mat-icon>edit_note</mat-icon>
-          <span>Add a note</span>
-        </button>
-        <button mat-menu-item disabled>
-          <mat-icon>delete</mat-icon>
-          <span>Delete</span>
-        </button>
-    </mat-menu>
-
-    <mat-card-title-group>
-        <mat-card-title>Address</mat-card-title>
-        <mat-card-subtitle></mat-card-subtitle>
-    </mat-card-title-group>
+<mat-card class="user-details">
     <mat-card-content>
-        {{ user.street }}<br>
-        {{ user.zipCode }} {{ user.city }}
+        <p>{{ user.firstName }} {{ user.lastName }}</p>
+        <p>{{ user.eMail }} {{ phone }} {{ mobile}}</p>
+        <p>{{ birthDate }}{{ age ? ', ' + age + localize().age || 'yo' : '' }}</p>
+        <p>{{ user.street }}</p>
+        <p>{{ user.zipCode }} {{ user.city }}</p>
     </mat-card-content>
 </mat-card>

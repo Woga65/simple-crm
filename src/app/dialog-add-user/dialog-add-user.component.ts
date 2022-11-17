@@ -101,6 +101,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     if (this.user.hasData() && !this.requiredformControls.some(fc => fc.errors)) {
       this.user.birthDate = new Date(this.birthDate).getTime();
       this.user.birthDate = !isNaN(this.user.birthDate) ? this.user.birthDate : 0;
+      this.data.user = new User(this.user);
       this.userExists ? this.updateUser() : this.addUser();
 
       const diffMillies = Date.now() - new Date(this.user.birthDate).getTime();

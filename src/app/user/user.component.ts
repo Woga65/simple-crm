@@ -116,6 +116,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
       if (res) {
         console.log('res: ', res);
         this._locale = res.lang ? res.lang : this._locale;
+        this.showMapEvent.emit({ lang: this._locale, data: res.user || user });
       }
       this.dialogLostFocus = true;
     });
@@ -171,14 +172,14 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
   userBirthDateToString(user: User[]): User[] {
     return user.map(u => {
-      u.birthDate = u.birthDate ? new Date(u.birthDate).toLocaleDateString() : '';
+      u.birthDate = u.birthDate ? new Date(u.birthDate).toISOString().slice(0, 10) : '';  //toLocaleDateString() : '';
       return u;
     });
   }
 
 
   userFocussed(ev:any, userData: User, row: number) {
-    this.showMapEvent.emit({ data: userData });
+    this.showMapEvent.emit({ lang: this._locale, data: userData });
   }
 
 

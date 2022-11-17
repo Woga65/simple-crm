@@ -74,8 +74,13 @@ mat-toolbar, mat-toolbar-row, .logo-container {
 .osm-container {
     width: 90%;
     height: 300px;
-    margin: calc(var(--font-size) * .5) auto calc(var(--font-size) * 3.5) auto;
+    margin: calc(var(--font-size) * .5) auto calc(var(--font-size) * .5) auto;
     box-shadow: 0 2px 1px -1px #0003,0 1px 1px #00000024,0 1px 3px #0000001f;
+}
+
+.user-details-container {
+    width: 90%;
+    margin: calc(var(--font-size) * .5) auto;
 }
 
 mat-toolbar .add-user-button {
