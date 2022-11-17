@@ -12,10 +12,10 @@
 
     ul {
         list-style-type: none;
+        width: 90%;        
         padding: 0;
-        margin: 0;
-        margin-top: calc(var(--font-size) * .5);
-        margin-right: auto;
+        margin: calc(var(--font-size) * .5) auto calc(var(--font-size) * .5) auto;
+        box-shadow: 0 2px 1px -1px #0003,0 1px 1px #00000024,0 1px 3px #0000001f;
     }
 
     li {
@@ -41,6 +41,7 @@
     padding-right: calc(var(--font-size) * 1.1);
     //border-bottom: 1px solid lightgray;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    margin-bottom: calc(var(--font-size) * .5);
     display: flex;
     align-items: center;
     img {
@@ -66,17 +67,15 @@ mat-toolbar, mat-toolbar-row, .logo-container {
 .sidebar-container {
     display: flex;
     flex-direction: column;
-    height: calc(100% - var(--font-size) * 3.5);
+    height: calc(100% - var(--font-size) * 4);
     align-items: center;
 }
 
 .osm-container {
-    width: 208px;
+    width: 90%;
     height: 300px;
-    margin-top: auto;
-    margin-bottom: calc(var(--font-size) * 3.5);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-    box-shadow: 1px 2px 12px 1px gray;
+    margin: calc(var(--font-size) * .5) auto calc(var(--font-size) * 3.5) auto;
+    box-shadow: 0 2px 1px -1px #0003,0 1px 1px #00000024,0 1px 3px #0000001f;
 }
 
 mat-toolbar .add-user-button {
