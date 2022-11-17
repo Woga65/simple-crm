@@ -1,5 +1,4 @@
-import { Component, OnInit, AfterViewInit, Inject, OnDestroy, QueryList, ViewChildren } from '@angular/core';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, QueryList, ViewChildren } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { User } from 'src/models/user.class';
@@ -59,7 +58,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public userService: UserService,
     public langService: LangService,
-    @Inject(MAT_DATE_LOCALE) private _locale: string,
   ) {
   
     this.users$ = this.userService.getUserList() as Observable<User[]>;
@@ -73,6 +71,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log(this.langService.getLocale());
   }
 
   ngAfterViewInit(): void {
@@ -113,7 +112,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   localize() {
-    return this.langService.getLocalFormat(this._locale);
+    return this.langService.getLocalFormat();
   }
 
 }

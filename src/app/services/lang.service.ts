@@ -1,14 +1,31 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, OnInit } from '@angular/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class LangService {
+export class LangService implements OnInit{
 
-  constructor() { }
+  public lang: string = this._locale;
+
+  constructor(@Inject(MAT_DATE_LOCALE) private _locale: string) { }
+
+  ngOnInit(): void {
+    this.lang = this._locale;
+  }
+
+  getLocale() {
+    return this.lang;
+  }
+
+  setLocale(locale: string = "") {
+    this.lang = this._locale = locale ? locale : this.lang;
+  }
 
   getLocalFormat(locale:string = ''): any {
-    switch (locale) {
+    this.lang = this._locale = locale ? locale : this.lang;
+    switch (this.lang) {
       case 'ja-JP':
         return this.jpFormat();
       case 'de':
@@ -24,9 +41,9 @@ export class LangService {
     return this.defaultFormat();
   }
 
-  deFormat(): any {
+  private deFormat(): any {
     return {
-      age: 'J.', add: 'hinzufügen', stats: 'Statistik', users: 'Adressen',
+      age: 'J.', byAge: 'nach Alter', byCategory: 'Kategorie', add: 'hinzufügen', stats: 'Statistik', users: 'Adressen',
       table: { title: 'Nutzerliste', fullName: 'Name', eMail: 'E-Mail', address: 'Adresse' },
       form: { title: 'Nutzer hinzufügen', cancel: 'abbrechen', save: 'speichern', lang: 'Deutsch (DE)' },
       update: { title: 'Nutzer bearbeiten', delete: 'löschen' },
@@ -40,18 +57,18 @@ export class LangService {
     };
   }
 
-  usFormat(): any {
+  private usFormat(): any {
     return {
-      age: 'yo', add: 'add user', stats: 'Statistics', users: 'Addresses',
+      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (US)' }, update: {}, firstName: {}, 
       lastName: {}, birthDate: { hint: 'MM/DD/YYYY' }, eMail: {},
       street: {}, zipCode: {}, town: {},
     };
   }
 
-  gbFormat(): any {
+  private gbFormat(): any {
     return {
-      age: 'yo.', add: 'add user', stats: 'Statistics', users: 'Addresses',
+      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (GB)' }, update: {}, firstName: { placeholder: 'John' }, 
       lastName: { placeholder: 'Smith' }, birthDate: { hint: 'DD/MM/YYYY' }, 
       eMail: { placeholder: 'john@smith.co.uk' }, street: { text: 'House No + Street',
@@ -60,18 +77,18 @@ export class LangService {
     };
   }
 
-  jpFormat(): any {
+  private jpFormat(): any {
     return {
-      age: 'yo.', add: 'add user', stats: 'Statistics', users: 'Addresses',
+      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (JP)' }, update: {}, firstName: {},
       lastName: {}, birthDate: { hint: 'YYYY/MM/DD' }, eMail: {},
       street: {}, zipCode: {}, town: {},
     }
   };
 
-  defaultFormat(): any {
+  private defaultFormat(): any {
     return {
-      age: 'yo.', add: 'add user', stats: 'Statistics', users: 'Addresses',
+      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (US)' }, update: {},
       firstName: {}, lastName: {}, birthDate: { hint: '' },
       eMail: {}, street: {}, zipCode: {}, town: {},

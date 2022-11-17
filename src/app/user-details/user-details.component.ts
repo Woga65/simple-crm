@@ -1,5 +1,4 @@
-import { Component, OnChanges, SimpleChanges, Input, Inject } from '@angular/core';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { Component, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { LangService } from '../services/lang.service';
 import { User } from 'src/models/user.class';
 
@@ -12,16 +11,14 @@ import { User } from 'src/models/user.class';
 export class UserDetailsComponent implements OnChanges {
 
   @Input('userData') userData: User = new User();
-  @Input('lang') lang: string  = this._locale;
   user: User = new User();
   birthDate: string = '';
   age: number = 0;
   phone: string = '';
   mobile: string = '';
 
-  constructor(
-    public langService: LangService,
-    @Inject(MAT_DATE_LOCALE) private _locale: string
+  constructor( 
+    public langService: LangService
     ) {}
 
 
@@ -41,6 +38,6 @@ export class UserDetailsComponent implements OnChanges {
 
 
   localize() {
-    return this.langService.getLocalFormat(this.lang);
+    return this.langService.getLocalFormat();
   }
 }

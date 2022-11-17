@@ -1,9 +1,9 @@
-<h1>Dashboard</h1>
+<h1>{{ localize().stats || 'Dashboard' }}</h1>
 
 <div class="charts-container">
 
     <div style="width: 45%;">
-        <h2>Ages</h2>
+        <h2>{{ localize().byAge || 'Ages' }}</h2>
         <canvas baseChart
             [type]="'doughnut'" 
             [legend]="true" 
@@ -14,7 +14,7 @@
     </div>
 
     <div style="width: 45%">
-        <h2>Categories</h2>
+        <h2>{{ localize().byCategory || 'Categories'}}</h2>
         <canvas baseChart
             [type]="'doughnut'"
             [legend]="true"

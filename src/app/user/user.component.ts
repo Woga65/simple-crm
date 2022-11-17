@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, OnDestroy, AfterViewChecked, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { User } from 'src/models/user.class';
@@ -51,7 +50,6 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     public userService: UserService,
     private _liveAnnouncer: LiveAnnouncer,
     public langService: LangService,
-    @Inject(MAT_DATE_LOCALE) private _locale: string,
   ) {
 
     this.users$ = this.userService.getUserList() as Observable<User[]>;
@@ -79,7 +77,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
 
   localize() {
-    return this.langService.getLocalFormat(this._locale);
+    return this.langService.getLocalFormat();
   }
 
  
@@ -111,12 +109,11 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
   openDialog(user: User = new User) {
     this.dialogLostFocus = false;
-    const dialogRef = this.dialog.open(DialogAddUserComponent, { data: { user: user, lang: this._locale }, disableClose: true });
+    const dialogRef = this.dialog.open(DialogAddUserComponent, { data: { user: user }, disableClose: true });
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
         console.log('res: ', res);
-        this._locale = res.lang ? res.lang : this._locale;
-        this.showMapEvent.emit({ lang: this._locale, data: res.user || user });
+        this.showMapEvent.emit({ data: res.user || user });
       }
       this.dialogLostFocus = true;
     });
@@ -179,7 +176,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
 
   userFocussed(ev:any, userData: User, row: number) {
-    this.showMapEvent.emit({ lang: this._locale, data: userData });
+    this.showMapEvent.emit({ data: userData });
   }
 
 
