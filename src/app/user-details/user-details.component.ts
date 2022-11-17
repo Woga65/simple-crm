@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges, Input } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, Input } from '@angular/core';
 import { LangService } from '../services/lang.service';
 import { User } from 'src/models/user.class';
 
@@ -8,24 +8,29 @@ import { User } from 'src/models/user.class';
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.scss']
 })
-export class UserDetailsComponent implements OnChanges {
+export class UserDetailsComponent implements OnChanges, OnInit {
 
   @Input('userData') userData: User = new User();
   user: User = new User();
-  birthDate: string = '';
+  birthDate: any = '';
   age: number = 0;
   phone: string = '';
   mobile: string = '';
+  lang: string = navigator.language;
 
-  constructor( 
-    public langService: LangService
-    ) {}
+  constructor(public langService: LangService) {}
 
+
+  ngOnInit(): void {
+    this.lang = this.langService.getLocale();
+  }
+  
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['userData']) {
+      this.lang = this.langService.getLocale();
       this.user = new User(this.userData);
-      this.birthDate = this.user.birthDate ? new Date(this.user.birthDate).toLocaleDateString() : '';
+      this.birthDate = this.user.birthDate ? new Date(this.user.birthDate) : ''; //.toLocaleDateString() : '';
       this.age = this.getAge();
     }
   }

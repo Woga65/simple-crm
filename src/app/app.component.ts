@@ -68,7 +68,7 @@ export class AppComponent {
   geoLocationSubscription() {
     return this.userComponent.showMapEvent.subscribe( (e:any) => {
       this.fromUserComponent = this.userComponentLoaded = true; // e['fromUserList'];
-      this.userData = new User(e['data']);
+      this.userData = e['data'];
       this.geoData$ = (this.geocodeService.getLocationByAddress(this.userData.zipCode, this.userData.city, this.userData.street) as Observable<GeoResult>)
         .pipe(take(1))
         .subscribe(geoData => this.geoData = this.showUsersLocation(geoData));

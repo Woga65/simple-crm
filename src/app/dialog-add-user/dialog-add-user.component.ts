@@ -103,15 +103,9 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
       this.user.birthDate = !isNaN(this.user.birthDate) ? this.user.birthDate : 0;
       this.data.user = new User(this.user);
       this.userExists ? this.updateUser() : this.addUser();
-
-      const diffMillies = Date.now() - new Date(this.user.birthDate).getTime();
-      const age = this.user.birthDate ? Math.abs(new Date(diffMillies).getUTCFullYear() - 1970) : 0;
-      console.log('age: ', age);
-
     } else {
       this.requiredformControls.forEach(fc => fc.markAsTouched());
       console.log('Empty user data not written!');
-      //console.log(this.requiredformControls[0].invalid);
     }
   }
 

@@ -71,7 +71,7 @@
 
     <!-- Data Rows -->
       <tr tabindex="1" mat-row *matRowDef="let row; let i=index; columns: displayedColumns;" id="row-{{i}}"
-        (click)="editUserByMouse(row.id, i)"
+        (click)="editUserByMouse(row, i)"
         (keydown)="checkKeys($event, row.id, i)"
         (keyup)="checkModifiedKeys($event, row.id, i)"
         (focus)="userFocussed($event, row, i)">

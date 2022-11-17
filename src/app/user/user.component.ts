@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, OnDestroy, AfterViewChecked, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil, take } from 'rxjs/operators';
 import { User } from 'src/models/user.class';
 import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
 import { MatPaginator } from '@angular/material/paginator';
@@ -110,9 +110,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   openDialog(user: User = new User) {
     this.dialogLostFocus = false;
     const dialogRef = this.dialog.open(DialogAddUserComponent, { data: { user: user }, disableClose: true });
-    dialogRef.afterClosed().subscribe(res => {
+    dialogRef.afterClosed().pipe(take(1)).subscribe(res => {
       if (res) {
-        console.log('res: ', res);
         this.showMapEvent.emit({ data: res.user || user });
       }
       this.dialogLostFocus = true;
@@ -169,7 +168,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
   userBirthDateToString(user: User[]): User[] {
     return user.map(u => {
-      u.birthDate = u.birthDate ? new Date(u.birthDate).toISOString().slice(0, 10) : '';  //toLocaleDateString() : '';
+      u.birthDate = u.birthDate ? new Date(u.birthDate).toDateString() : '';
       return u;
     });
   }
@@ -203,11 +202,12 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
    * represented by that specific table row. Otherwise
    * move the focus to that specific row.
    * 
-   * @param { string } userId - the user's Id
+   * @param { string } userData - the user's Record
    * @param { number } row - the number of the row that has been clicked
    */
-  editUserByMouse(userId: string, row: number) {
-    if (this.changedRowId == `row-${row}`) this.editUser(userId);
+  editUserByMouse(userData: User, row: number) {
+    this.dialogLostFocus = false;
+    if (this.changedRowId == `row-${row}`) this.editUser(userData.id);
     this.changedRowId = `row-${row}`;
   }
 

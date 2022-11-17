@@ -1,5 +1,6 @@
 // Generic Modules
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -7,6 +8,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+
+import localeDE from '@angular/common/locales/de';
+import localeEnGb from '@angular/common/locales/en-GB';
+registerLocaleData(localeDE, 'de');
+registerLocaleData(localeEnGb, 'en-gb');
 
 // Material Design
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -97,13 +103,14 @@ import { OsmMapComponent } from './osm-map/osm-map.component';
     provideFirestore(() => getFirestore()),
   ],
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'de' },
+    { provide: MAT_DATE_LOCALE, useValue: navigator.language },
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    { provide: LOCALE_ID, useValue: navigator.language },
   ],
   bootstrap: [AppComponent]
 })

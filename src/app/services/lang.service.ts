@@ -29,12 +29,14 @@ export class LangService implements OnInit{
       case 'ja-JP':
         return this.jpFormat();
       case 'de':
+      case 'de-DE':
       case 'de-at':
       case 'de-ch':
         return this.deFormat();
       case 'en-gb':
       case 'fr':
         return this.gbFormat();
+      case 'en':
       case 'en-US':
         return this.usFormat();
     }
@@ -42,6 +44,7 @@ export class LangService implements OnInit{
   }
 
   private deFormat(): any {
+    this.lang = this._locale = 'de';
     return {
       age: 'J.', byAge: 'nach Alter', byCategory: 'Kategorie', add: 'hinzufügen', stats: 'Statistik', users: 'Adressen',
       table: { title: 'Nutzerliste', fullName: 'Name', eMail: 'E-Mail', address: 'Adresse' },
@@ -67,6 +70,7 @@ export class LangService implements OnInit{
   }
 
   private gbFormat(): any {
+    this.lang = this._locale = 'en-gb';
     return {
       age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (GB)' }, update: {}, firstName: { placeholder: 'John' }, 
@@ -78,6 +82,7 @@ export class LangService implements OnInit{
   }
 
   private jpFormat(): any {
+    this.lang = this._locale = 'en-US';
     return {
       age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (JP)' }, update: {}, firstName: {},
@@ -87,6 +92,7 @@ export class LangService implements OnInit{
   };
 
   private defaultFormat(): any {
+    this.lang = this._locale = 'en-US';
     return {
       age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
       table: {}, form: { lang: 'English (US)' }, update: {},
