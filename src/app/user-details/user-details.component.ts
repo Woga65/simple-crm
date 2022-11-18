@@ -30,7 +30,7 @@ export class UserDetailsComponent implements OnChanges, OnInit {
     if (changes['userData']) {
       this.lang = this.langService.getLocale();
       this.user = new User(this.userData);
-      this.birthDate = this.user.birthDate ? new Date(this.user.birthDate) : ''; //.toLocaleDateString() : '';
+      this.birthDate = this.user.birthDate ? new Date(this.user.birthDate) : '';  //.toDateString() : ''; //.toLocaleDateString() : '';
       this.age = this.getAge();
     }
   }

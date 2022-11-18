@@ -12,6 +12,7 @@
         <mat-label>{{ localize().firstName.text || 'First Name' }}</mat-label>
         <input  [disabled]="loading"
                 [(ngModel)]="user.firstName"
+                (keydown)="keyDownEvent($event)"
                 matInput
                 placeholder="{{ localize().firstName.placeholder || 'John' }}">
         <!-- <mat-hint>please enter a name</mat-hint> -->
@@ -22,6 +23,7 @@
         <input  [disabled]="loading"
                 [(ngModel)]="user.lastName"
                 [formControl]="requiredformControls[0]"
+                (keydown)="keyDownEvent($event)"
                 matInput
                 required
                 placeholder="{{ localize().lastName.placeholder || 'Doe' }}">
@@ -34,6 +36,7 @@
         <mat-label>{{ localize().birthDate.text || 'Date of birth' }}</mat-label>
         <input  [disabled]="loading"
                 [(ngModel)]="birthDate"
+                (keydown)="keyDownEvent($event)"
                 matInput
                 [matDatepicker]="dp">
         <mat-hint>{{ localize().birthDate.hint || ''}}</mat-hint>
@@ -45,6 +48,7 @@
         <mat-label>{{ localize().eMail.text || 'E-Mail' }}</mat-label>
         <input  [disabled]="loading"
                 [(ngModel)]="user.eMail"
+                (keydown)="keyDownEvent($event)"
                 matInput
                 pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
                 placeholder="{{ localize().eMail.placeholder || 'john@doe.com' }}">
@@ -61,9 +65,11 @@
                 matInput
                 [matAutocomplete]="autoPlz"
                 [formControl]="formControlPlz"
+                (keydown)="keyDownEvent($event, true)"
                 placeholder="{{ localize().zipCode.placeholder || '10312' }}">
-        <mat-autocomplete #autoPlz="matAutocomplete">
-          <mat-option *ngFor="let data of filteredPlzData | async" [value]="data.plz" (onSelectionChange)="user.city = data.city">
+        <mat-autocomplete autoActiveFirstOption #autoPlz="matAutocomplete">
+          <mat-option *ngFor="let data of filteredPlzData | async" [value]="data.plz"
+                      (onSelectionChange)="user.city = data.city;  selectionChanged = true;">
             {{data.plz}} {{data.city}}
           </mat-option>
         </mat-autocomplete>
@@ -77,9 +83,11 @@
                 matInput
                 [matAutocomplete]="autoCity"
                 [formControl]="formControlCity"
+                (keydown)="keyDownEvent($event, true)"
                 placeholder="{{ localize().town.placeholder || 'Staten Island, NY' }}">
-        <mat-autocomplete #autoCity="matAutocomplete">
-          <mat-option *ngFor="let data of filteredCityData | async" [value]="data.city" (onSelectionChange)="user.zipCode = data.plz">
+        <mat-autocomplete autoActiveFirstOption #autoCity="matAutocomplete">
+          <mat-option *ngFor="let data of filteredCityData | async" [value]="data.city"
+                      (onSelectionChange)="user.zipCode = data.plz; selectionChanged = true;">
             {{data.plz}} {{data.city}}
           </mat-option>
         </mat-autocomplete>
@@ -95,9 +103,11 @@
                 matInput
                 [matAutocomplete]="autoStreet"
                 [formControl]="formControlStreet"
+                (keydown)="keyDownEvent($event, !selectionChanged);"
                 placeholder="{{ localize().street.placeholder || '17 Adams Street' }}">
-        <mat-autocomplete #autoStreet="matAutocomplete">
-          <mat-option *ngFor="let data of filteredStreetData | async" [value]="data.street">
+        <mat-autocomplete autoActiveFirstOption #autoStreet="matAutocomplete">
+          <mat-option *ngFor="let data of filteredStreetData | async" [value]="data.street"
+                      (onSelectionChange)="selectionChanged = true;">
             {{data.street}}
           </mat-option>
         </mat-autocomplete>
@@ -114,7 +124,8 @@
               (click)="onNoClick()">
         {{ localize().form.cancel || 'Cancel' }}
       </button>
-      <button [disabled]="loading"
+      <button id="save-user-button"
+              [disabled]="loading"
               mat-button
               (click)="saveUser()"
               [attr.cdkFocusInitial]="userExists ? '' : null">

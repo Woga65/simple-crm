@@ -25,6 +25,8 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   formControlCity = new FormControl('');
   formControlStreet = new FormControl('');
 
+  selectionChanged: boolean = false;
+
   filteredPlzData: Observable<PlzRow[]> | any;
   filteredCityData: Observable<PlzRow[]> | any;
   filteredStreetData: Observable<PlzRow[]> | any;
@@ -70,11 +72,8 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.componentIsDestroyed$))
       .subscribe(e => {
         if (e.key == 'Escape') this.onNoClick();
-        if ((e.target as HTMLElement).id) {
-          console.log('Field: ', Number((e.target as HTMLElement).id.slice(10)), e.key, e.code);
-        }
       });
- }
+  }
 
 
   ngOnInit(): void {
@@ -232,4 +231,27 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
       : dStreet?.startsWith(vStreet); 
   }
 
+
+
+  /*******************************************
+  **  input fields focus management allow   **
+  **  use <Enter> Key to step through data  **
+  *******************************************/
+
+  keyDownEvent(e:KeyboardEvent, pristine: boolean = true) {
+    if (pristine) this.checkKeyboardInput(e.key, e.target as HTMLElement);
+    this.selectionChanged = false;
+  }
+
+  checkKeyboardInput(key: string, el: HTMLElement) {
+    if (key == 'Enter' && el.id) {
+      const nextField = this.inputFields()[this.inputFields().indexOf(el.id) + 1] || this.inputFields()[0];
+      document.getElementById(nextField)?.focus();
+    }
+  }
+
+  inputFields() {
+    return [... document.querySelectorAll('.dialog-container input') as any].filter(el => el.id).map(el => el.id);
+      //.concat(['save-user-button']);
+  }
 }
