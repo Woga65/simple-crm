@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, QueryList, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { User } from 'src/models/user.class';
@@ -10,7 +10,8 @@ import { BaseChartDirective } from 'ng2-charts';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   private componentIsDestroyed$ = new Subject<boolean>();

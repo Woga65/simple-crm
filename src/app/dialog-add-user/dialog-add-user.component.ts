@@ -1,36 +1,29 @@
-import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl, Validators } from '@angular/forms';
 import { User } from 'src/models/user.class';
 import { UserService } from '../services/user.service';
 import { LangService } from '../services/lang.service';
 import { PlzService, Plz, PlzRow } from '../services/plz.service';
-import { Subscription, Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 
 @Component({
   selector: 'app-dialog-add-user',
   templateUrl: './dialog-add-user.component.html',
-  styleUrls: ['./dialog-add-user.component.scss']
+  styleUrls: ['./dialog-add-user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogAddUserComponent implements OnInit, OnDestroy {
   private componentIsDestroyed$ = new Subject<boolean>();
 
-  requiredformControls = [new FormControl('', [Validators.required])];
-
-  formControlPlz = new FormControl('');
-  formControlCity = new FormControl('');
-  formControlStreet = new FormControl('');
-
   selectionChanged: boolean = false;
 
-  filteredPlzData: Observable<PlzRow[]> | any;
-  filteredCityData: Observable<PlzRow[]> | any;
-  filteredStreetData: Observable<PlzRow[]> | any;
-
+  filteredPlzData: Observable<PlzRow[]> = new Observable;
+  filteredCityData: Observable<PlzRow[]> = new Observable;
+  filteredStreetData: Observable<PlzRow[]> = new Observable;
 
   currentLang: number = 0;
   languages: string[] = ['en-US', 'de', 'en-gb'];
@@ -40,7 +33,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   birthDate: Date | any = new Date;
   userExists: boolean = false;
 
-  plzData$: Subscription | Observable<Plz[]> | any; // | Plz[];
+  plzData$: Observable<Plz[]> = new Observable;
   plzData: PlzRow[] = [];
 
   @ViewChild(MatAutocompleteTrigger) trigger:any;
@@ -53,10 +46,6 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     private _adapter: DateAdapter<any>,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
     @Inject(MAT_DIALOG_DATA) private data: any) {
-    //
-    this.filteredPlzData = this.getFilteredPostcodeData();
-    this.filteredCityData = this.getFilteredCityData();
-    this.filteredStreetData = this.getFilteredStreetData();
     //
     this.data = this.data || {};
     this.user = new User(this.data.user);
@@ -97,13 +86,12 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
 
   saveUser() {
-    if (this.user.hasData() && !this.requiredformControls.some(fc => fc.errors)) {
+    if (this.user.hasData() && this.user.lastName) {
       this.user.birthDate = new Date(this.birthDate).getTime();
       this.user.birthDate = !isNaN(this.user.birthDate) ? this.user.birthDate : 0;
       this.data.user = new User(this.user);
       this.userExists ? this.updateUser() : this.addUser();
     } else {
-      this.requiredformControls.forEach(fc => fc.markAsTouched());
       console.log('Empty user data not written!');
     }
   }
@@ -152,41 +140,28 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
 
   getFilteredCityData() {
-    return this.formControlCity.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap((value) => this.getPostDataBy('plz', value || '')),
-    );
+    this.filteredCityData = this.getPostDataBy('plz', this.user.city || '');
   }
 
 
   getFilteredStreetData() {
-    return this.formControlStreet.valueChanges.pipe(
-      startWith(''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap((value) => this.getPostDataBy('city', value || '')),
-    );
+    this.filteredStreetData = this.getPostDataBy('city', this.user.street || '');
   }
   
 
   getFilteredPostcodeData() {
-    return this.formControlPlz.valueChanges.pipe(
-      startWith(''),
-      debounceTime(500),
-      distinctUntilChanged(),
-      switchMap((value) => this.getPostDataBy('address', value || '')),
-    );
+    this.filteredPlzData = this.getPostDataBy('address', this.user.zipCode || '');
   }
   
 
   getPostDataBy(by: string, value: string):Observable<PlzRow[]> {
     return this.plzService.getPostalData(by, this.user.zipCode, this.user.city, this.user.street, this._locale)
       .pipe(
-        takeUntil(this.componentIsDestroyed$),
+        debounceTime(800),
+        distinctUntilChanged(),
         map(data => this.filterPlzData(data?.rows || [])),
-        map(data => this.filterPostalData(data || [], value, by))
+        map(data => this.filterPostalData(data || [], value, by)),
+        startWith([]),
       );
   }
 
@@ -199,7 +174,6 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
  
 
   private filterPostalData(data:PlzRow[], value: string, by:string) {
-    console.log('by: ', by, 'plz: ', this.user.zipCode, 'city: ', this.user.city);
     switch (by) {
       case 'postcode': case 'zipcode': case 'plz':
         return data.filter(d => this.dataMatchesCity(d, value));
@@ -232,26 +206,27 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   }
 
 
-
   /*******************************************
   **  input fields focus management allow   **
   **  use <Enter> Key to step through data  **
   *******************************************/
 
   keyDownEvent(e:KeyboardEvent, pristine: boolean = true) {
-    if (pristine) this.checkKeyboardInput(e.key, e.target as HTMLElement);
+    if (pristine) this.checkKeyboardInput(e, e.key, e.target as HTMLElement);
     this.selectionChanged = false;
   }
 
-  checkKeyboardInput(key: string, el: HTMLElement) {
+  checkKeyboardInput(e: KeyboardEvent, key: string, el: HTMLElement) {
     if (key == 'Enter' && el.id) {
+      e.preventDefault();
       const nextField = this.inputFields()[this.inputFields().indexOf(el.id) + 1] || this.inputFields()[0];
       document.getElementById(nextField)?.focus();
     }
   }
 
   inputFields() {
-    return [... document.querySelectorAll('.dialog-container input') as any].filter(el => el.id).map(el => el.id);
-      //.concat(['save-user-button']);
+    return [... document.querySelectorAll('.dialog-container input') as any].filter(el => el.id).map(el => el.id)
+      .concat(['save-user-button']);
   }
+
 }

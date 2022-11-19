@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, Input } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, Input, ChangeDetectionStrategy } from '@angular/core';
 import { LangService } from '../services/lang.service';
 import { User } from 'src/models/user.class';
 
@@ -6,7 +6,8 @@ import { User } from 'src/models/user.class';
 @Component({
   selector: 'app-user-details',
   templateUrl: './user-details.component.html',
-  styleUrls: ['./user-details.component.scss']
+  styleUrls: ['./user-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class UserDetailsComponent implements OnChanges, OnInit {
 

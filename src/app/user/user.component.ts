@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, OnDestroy, AfterViewChecked, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil, take } from 'rxjs/operators';
@@ -10,13 +10,13 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { UserService } from '../services/user.service';
 import { LangService } from '../services/lang.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-//import { SelectionModel } from '@angular/cdk/collections';
 
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+  styleUrls: ['./user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 
 export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {

@@ -21,8 +21,8 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ localize().lastName.text || 'Last Name' }}</mat-label>
         <input  [disabled]="loading"
+                [required]="true"
                 [(ngModel)]="user.lastName"
-                [formControl]="requiredformControls[0]"
                 (keydown)="keyDownEvent($event)"
                 matInput
                 required
@@ -62,9 +62,9 @@
         <mat-label>{{ localize().zipCode.text || 'Zip code' }}</mat-label>
         <input  [disabled]="loading"
                 [(ngModel)]="user.zipCode"
+                (ngModelChange)="getFilteredPostcodeData()"
                 matInput
                 [matAutocomplete]="autoPlz"
-                [formControl]="formControlPlz"
                 (keydown)="keyDownEvent($event, true)"
                 placeholder="{{ localize().zipCode.placeholder || '10312' }}">
         <mat-autocomplete autoActiveFirstOption #autoPlz="matAutocomplete">
@@ -80,9 +80,9 @@
         <mat-label>{{ localize().town.text || 'Town' }}</mat-label>
         <input  [disabled]="loading"
                 [(ngModel)]="user.city"
+                (ngModelChange)="getFilteredCityData()"
                 matInput
                 [matAutocomplete]="autoCity"
-                [formControl]="formControlCity"
                 (keydown)="keyDownEvent($event, true)"
                 placeholder="{{ localize().town.placeholder || 'Staten Island, NY' }}">
         <mat-autocomplete autoActiveFirstOption #autoCity="matAutocomplete">
@@ -100,9 +100,9 @@
         <mat-label>{{ localize().street.text || 'House No + Street' }}</mat-label>
         <input  [disabled]="loading"
                 [(ngModel)]="user.street"
+                (ngModelChange)="getFilteredStreetData()"
                 matInput
                 [matAutocomplete]="autoStreet"
-                [formControl]="formControlStreet"
                 (keydown)="keyDownEvent($event, !selectionChanged);"
                 placeholder="{{ localize().street.placeholder || '17 Adams Street' }}">
         <mat-autocomplete autoActiveFirstOption #autoStreet="matAutocomplete">

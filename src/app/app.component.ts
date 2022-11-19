@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDrawerMode } from '@angular/material/sidenav';
 import { Observable, Subscription } from 'rxjs';
 import { User } from 'src/models/user.class';
@@ -12,7 +12,8 @@ import { Map } from 'leaflet';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class AppComponent {
   title = 'simple-crm';

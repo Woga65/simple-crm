@@ -1,11 +1,12 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { Map, ZoomAnimEvent , MapOptions, tileLayer, latLng, LeafletEvent, marker } from 'leaflet';
 
 
 @Component({
   selector: 'app-osm-map',
   templateUrl: './osm-map.component.html',
-  styleUrls: ['./osm-map.component.scss']
+  styleUrls: ['./osm-map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 
 export class OsmMapComponent implements OnInit, OnDestroy, OnChanges {
