@@ -86,13 +86,11 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
 
   saveUser() {
-    if (this.user.hasData() && this.user.lastName) {
+    if (!this.fieldInvalid() && this.user.hasData()) {
       this.user.birthDate = new Date(this.birthDate).getTime();
       this.user.birthDate = !isNaN(this.user.birthDate) ? this.user.birthDate : 0;
       this.data.user = new User(this.user);
       this.userExists ? this.updateUser() : this.addUser();
-    } else {
-      console.log('Empty user data not written!');
     }
   }
 
@@ -227,6 +225,29 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   inputFields() {
     return [... document.querySelectorAll('.dialog-container input') as any].filter(el => el.id).map(el => el.id)
       .concat(['save-user-button']);
+  }
+
+
+  /***********************************
+  **  final input field validation  **
+  **  before data record is saved   **
+  ***********************************/
+
+  fieldInvalid(): boolean {
+    let firstInvalidField: any = null;
+    document.querySelectorAll('.dialog-container .mat-form-field').forEach(field => {
+      const input = field.querySelector('input');
+      firstInvalidField = this.handleValidityState(input, field, firstInvalidField);
+    });
+    if (firstInvalidField) firstInvalidField.focus();
+    return firstInvalidField ? true : false;
+  }
+
+  handleValidityState(input: HTMLInputElement | null, field: Element, firstInvalid: any) {
+    const validityState = input ? input.validity.valid : true;
+    field.classList.toggle('mat-form-field-invalid', !validityState);
+    input?.blur(), input?.focus();
+    return firstInvalid ? firstInvalid : (validityState ? firstInvalid : input);
   }
 
 }
