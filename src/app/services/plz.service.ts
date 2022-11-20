@@ -41,6 +41,7 @@ export class PlzService {
     return this.getCityByPostCode(plz);
   }
 
+
   getPostCodeByAddress(plz = '34', city = 'kassel', street = 'frankfurter str. 45') {
     const options = {
       params: new HttpParams({ fromString: PlzService.postCodeQueryTemplate(plz, city, street, 'plz') }) 
@@ -52,6 +53,7 @@ export class PlzService {
       );
   }
 
+
   getCityByPostCode(plz = '34') {
     const options = {
       params: new HttpParams({ fromString: PlzService.cityQueryTemplate(plz, 'city') }) 
@@ -62,6 +64,7 @@ export class PlzService {
         catchError(this.handleError)
       );
   }
+  
 
   getStreetByCity(plz = '34', city = 'kassel') {
     const options = {
@@ -88,9 +91,13 @@ export class PlzService {
   static postCodeQueryTemplate(plz = '36', city = 'ful', street = 'dal', finda = 'plz') {   // no records if full PLZ is supplied
     return `?plz_city=${city}&plz_plz=${plz}&plz_street=${street}&finda=${finda}&plz_city_clear&plz_ditrict=&lang=de_DE`;
   }
+
+
   static cityQueryTemplate(plz = '36', finda = 'city') {    // finds city for a given PLZ
     return `?finda=${finda}&city=${plz}&lang=de_DE`;
   }
+
+
   static streetQueryTemplate(plz = '36', city = 'fu', finda = 'streets') {    // can create a huge amount of data
     return `?finda=${finda}&plz_plz=${plz}&plz_city=${city}&plz_district=&lang=de_DE`;
   }
@@ -108,6 +115,7 @@ export interface Plz {
   switchTo: string,
 }
 
+
 export interface PlzRow {
   city: string,
   cityaddition?: string,
@@ -119,5 +127,3 @@ export interface PlzRow {
   districtlink?: boolean,
   streetlink?:boolean,
 }
-
-

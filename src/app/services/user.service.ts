@@ -15,6 +15,7 @@ export class UserService {
     this.coll = collection(this.firestore, 'users');
   }
 
+
   async getUserDoc(id:string) {
     const docRef = doc(this.coll, id);
     return await getDoc(docRef)
@@ -22,9 +23,11 @@ export class UserService {
       .catch((err) => ({error: err}));
   }
 
+
   getUserList() {
     return collectionData(this.coll);
   }
+
 
   selectFromUserWhere(field: keyof(User), operator: WhereFilterOp, value: any, order?: 'desc' | 'asc') {
     return (
@@ -32,6 +35,7 @@ export class UserService {
       collectionData(query(this.coll, where(field, operator, value)))
     );
   }
+
 
   async createUser(user:User) {
     try {
@@ -45,6 +49,7 @@ export class UserService {
     }
   }
 
+
   async deleteUser(user:User) {
     try {
       const docRef = doc(this.coll, user.id);
@@ -55,6 +60,7 @@ export class UserService {
       console.error('Failed to delete user: ', error);
     }
   }
+  
 
   async updateUser(user:User) {
     try {

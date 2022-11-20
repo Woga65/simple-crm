@@ -24,7 +24,6 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   private dataFilterChanged$ = new Subject<boolean>();
 
   user: User = new User();
-  users$: Observable<User[]>;
   users: User[] = [];
 
   displayedColumns: string[] = ['position', 'firstName', 'lastName', 'eMail', 'city', 'marker'];
@@ -50,12 +49,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     public userService: UserService,
     private _liveAnnouncer: LiveAnnouncer,
     public langService: LangService,
-  ) {
-
-    this.users$ = this.userService.getUserList() as Observable<User[]>;
-    //for testing queries:
-    //this.users$ = this.userService.selectFromUserWhere('marker', '>=', '=A', 'desc') as Observable<User[]>;
-  }
+  ) { }
 
 
   ngOnInit(): void {
@@ -119,10 +113,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
 
   initUsersList() {
-    this.users$.pipe(
-      takeUntil(this.componentIsDestroyed$ && this.dataFilterChanged$),
-      map(usr => this.userBirthDateToString(usr))
-    ).subscribe(userData => {
+    this.getUsersList().subscribe(userData => {
       console.log('Neue Daten sind verfügbar: ', userData);
       this.users = this.filterUserData(userData, this.filterValue);
       this.dataSource = new MatTableDataSource(this.users);
@@ -134,6 +125,15 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     });
+  }
+
+
+  getUsersList() {
+    return (this.userService.getUserList() as Observable<User[]>)
+      .pipe(
+        takeUntil(this.componentIsDestroyed$ && this.dataFilterChanged$),
+        map(usr => this.userBirthDateToString(usr))
+      );
   }
 
 
@@ -226,23 +226,42 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   checkKeys(e: KeyboardEvent, id: any, row: any = 0) {
     this.changedRowId = '';
     this.forceFocus = true;
-    const el = this.getTableElements(e.target as HTMLElement);
-    const pg: MatPaginator = this.paginator;
-    const modifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey || e.key == "AltGraph";
-    const umlaut = 'äöüßÄÖÜ'.includes(e.key);
     e.stopPropagation();
-    if (this.letterKeyPressed(e.code) || umlaut) {
+    if (this.letterKeyPressed(e.code) || this.isUmlaut(e.key)) {
       e.preventDefault();
-      if (!umlaut && !modifier) {
-        this.changedRowId = `row-${row}`;
-        this.markUser(id, e.key);
-      }
-      return;
+      this.markUserIfValidLetter(id, row, e);
+    } else {
+      this.checkNavigationKeys(id, row, e);
     }
-    if (!modifier) {
+  }
+
+
+  private markUserIfValidLetter(id: any, row: any, e: KeyboardEvent) {
+    if (!this.isUmlaut(e.key) && !this.modifier(e)) {
+      this.changedRowId = `row-${row}`;
+      this.markUser(id, e.key);
+    }
+  }
+
+
+  private checkNavigationKeys(id: any, row: any, e: KeyboardEvent) {
+    if (!this.modifier(e)) {
+      const el = this.getTableElements(e.target as HTMLElement);
+      const pg: MatPaginator = this.paginator;
       this.getValidActions(pg).forEach(k => e.code == k.key ? k.callback(id, row, el, pg, e) : false);
     }
   }
+
+
+  private isUmlaut(key: string) {
+    return 'äöüßÄÖÜ'.includes(key)
+  }
+
+
+  private modifier(e:KeyboardEvent) {
+    return e.shiftKey || e.altKey || e.ctrlKey || e.metaKey || e.key == "AltGraph";
+  }
+
 
   checkModifiedKeys(e: KeyboardEvent, id: any, row: any = 0) {
     if (e.altKey && e.code == 'KeyN') {
@@ -257,6 +276,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     return (code >= 'KeyA' && code <= 'KeyZ') || code == 'Space';
   }
 
+
   private getValidActions(pg: MatPaginator) {
     return [
       { key: 'Enter', callback: this.edit.bind(this) },
@@ -269,28 +289,34 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     ];
   }
 
+
   private edit(userId: string, row: number) {
     this.changedRowId = `row-${row}`;
     this.editUser(userId);
   }
+
 
   private prevRow(id: any, row: number, el: any, pg: any, ev: any) {
     if (row > 4) ev.preventDefault();
     el.prev ? el.prev.focus() : el.last.focus();
   }
 
+
   private nextRow(id: any, row: number, el: any, pg: any, ev: any) {
     if (row < 4) ev.preventDefault();
     el.next ? el.next.focus() : el.first.focus();
   }
 
+
   private prevPage(id: any, row: any, el: any, pg: any) {
     pg.hasPreviousPage() ? pg.previousPage() : pg.lastPage();
   }
 
+
   private nextPage(id: any, row: any, el: any, pg: any) {
     pg.hasNextPage() ? pg.nextPage() : pg.firstPage();
   }
+
 
   private getTableElements(el: HTMLElement): object | any {
     return {
@@ -329,22 +355,25 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   observeUserTable(): MutationObserver {
     const table: HTMLTableElement | any = document.querySelector('table');
     const options = { childList: true, subtree: true };
-    const callback = (mutationList: any[]) => {  //the second parameter (= observer instance) is not needed here
-      const addedRow = this.getAddedRow(mutationList);
-      const removedRow = this.getRemovedRow(mutationList);
-      this.firstTableRow = this.getfirstRow(mutationList) || this.firstTableRow;
-      if (this.changedRowId) {
-        document.getElementById(this.changedRowId)?.focus();
-        return;
-      }
-      if ((addedRow || removedRow) && !this.changedRowId) { 
-        this.firstTableRow.focus();
-      }
-    };
-    const observer = new MutationObserver(callback);
+    const observer = new MutationObserver(this.observerCallback.bind(this));
     observer.observe(table, options);
     return observer;
   }
+
+
+  observerCallback(mutationList: any[]) {     //the second parameter (= observer instance) is not needed here
+    const addedRow = this.getAddedRow(mutationList);
+    const removedRow = this.getRemovedRow(mutationList);
+    this.firstTableRow = this.getfirstRow(mutationList) || this.firstTableRow;
+    if (this.changedRowId) {
+      document.getElementById(this.changedRowId)?.focus();
+      return;
+    }
+    if ((addedRow || removedRow) && !this.changedRowId) { 
+      this.firstTableRow.focus();
+    }
+  }
+
 
   private getAddedRow(ml:any[]): HTMLElement {
     return ml.filter(m =>
@@ -352,11 +381,13 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     )[0]?.addedNodes[0] || null;
   }
 
+
   private getRemovedRow(ml:any[]): HTMLElement {
     return ml.filter(m =>
       m.removedNodes[0] && m.removedNodes[0].nodeName == 'TR' && m.removedNodes[0].id
     )[0]?.removedNodes[0] || null;
   }
+
 
   private getfirstRow(ml:any[]): HTMLElement {
     return ml.filter(m =>
@@ -366,6 +397,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     )[0]?.addedNodes[0] || null;
   }
 
+
   ngAfterViewChecked(): void {
     if (this.changedRowId && this.forceFocus) {
       document.getElementById(this.changedRowId)?.focus();
@@ -374,3 +406,11 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
 }
 
+  /*
+  for queries / server side filtering:
+  
+  getUsersList() {
+    return (this.userService.selectFromUserWhere('marker', '>=', '=A', 'desc') as Observable<User[]>)
+      .pipe(...);
+  }
+  */

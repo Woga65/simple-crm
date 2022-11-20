@@ -93,6 +93,7 @@ export class AppComponent {
     return { x: x, y: y, z: x || y ? 16 : 1, text: text };
   }
 
+  
   localize() {
     return this.langService.getLocalFormat();
   }

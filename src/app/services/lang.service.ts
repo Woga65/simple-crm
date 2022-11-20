@@ -11,17 +11,21 @@ export class LangService implements OnInit{
 
   constructor(@Inject(MAT_DATE_LOCALE) private _locale: string) { }
 
+
   ngOnInit(): void {
     this.lang = this._locale;
   }
+
 
   getLocale() {
     return this.lang;
   }
 
+
   setLocale(locale: string = "") {
     this.lang = this._locale = locale ? locale : this.lang;
   }
+
 
   getLocalFormat(locale:string = ''): any {
     this.lang = this._locale = locale ? locale : this.lang;
@@ -43,6 +47,7 @@ export class LangService implements OnInit{
     return this.defaultFormat();
   }
 
+
   private deFormat(): any {
     this.lang = this._locale = 'de';
     return {
@@ -60,6 +65,7 @@ export class LangService implements OnInit{
     };
   }
 
+
   private usFormat(): any {
     return {
       age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
@@ -68,6 +74,7 @@ export class LangService implements OnInit{
       street: {}, zipCode: {}, town: {},
     };
   }
+
 
   private gbFormat(): any {
     this.lang = this._locale = 'en-gb';
@@ -81,6 +88,7 @@ export class LangService implements OnInit{
     };
   }
 
+
   private jpFormat(): any {
     this.lang = this._locale = 'en-US';
     return {
@@ -90,6 +98,7 @@ export class LangService implements OnInit{
       street: {}, zipCode: {}, town: {},
     }
   };
+  
 
   private defaultFormat(): any {
     this.lang = this._locale = 'en-US';
