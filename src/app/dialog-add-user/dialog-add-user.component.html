@@ -6,12 +6,12 @@
   </h1>
 
   <div mat-dialog-content>
+  <form [formGroup]="userForm">
 
     <div>
       <mat-form-field class="mr-16" appearance="outline">
         <mat-label>{{ localize().firstName.text || 'First Name' }}</mat-label>
-        <input  [disabled]="loading"
-                [(ngModel)]="user.firstName"
+        <input  formControlName="firstName"
                 (keydown)="keyDownEvent($event)"
                 matInput
                 placeholder="{{ localize().firstName.placeholder || 'John' }}">
@@ -20,9 +20,8 @@
 
       <mat-form-field appearance="outline">
         <mat-label>{{ localize().lastName.text || 'Last Name' }}</mat-label>
-        <input  [disabled]="loading"
-                [required]="true"
-                [(ngModel)]="user.lastName"
+        <input  [required]="true"
+                formControlName="lastName"
                 (keydown)="keyDownEvent($event)"
                 matInput
                 required
@@ -34,8 +33,7 @@
     <div>
       <mat-form-field class="mr-16 birth-date" appearance="outline">
         <mat-label>{{ localize().birthDate.text || 'Date of birth' }}</mat-label>
-        <input  [disabled]="loading"
-                [(ngModel)]="birthDate"
+        <input  formControlName="birthDate"
                 (keydown)="keyDownEvent($event)"
                 matInput
                 [matDatepicker]="dp">
@@ -46,8 +44,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>{{ localize().eMail.text || 'E-Mail' }}</mat-label>
-        <input  [disabled]="loading"
-                [(ngModel)]="user.eMail"
+        <input  formControlName="eMail"
                 (keydown)="keyDownEvent($event)"
                 matInput
                 pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
@@ -60,16 +57,14 @@
     <div>
       <mat-form-field class="mr-16" appearance="outline">
         <mat-label>{{ localize().zipCode.text || 'Zip code' }}</mat-label>
-        <input  [disabled]="loading"
-                [(ngModel)]="user.zipCode"
-                (ngModelChange)="getFilteredPostcodeData()"
+        <input  formControlName="zipCode"
                 matInput
                 [matAutocomplete]="autoPlz"
                 (keydown)="keyDownEvent($event, true)"
                 placeholder="{{ localize().zipCode.placeholder || '10312' }}">
         <mat-autocomplete autoActiveFirstOption #autoPlz="matAutocomplete">
           <mat-option *ngFor="let data of filteredPlzData | async" [value]="data.plz"
-                      (onSelectionChange)="user.city = data.city;  selectionChanged = true;">
+                      (onSelectionChange)="userForm.controls['city'].setValue(data.city); selectionChanged = true;">
             {{data.plz}} {{data.city}}
           </mat-option>
         </mat-autocomplete>
@@ -78,16 +73,14 @@
 
       <mat-form-field appearance="outline">
         <mat-label>{{ localize().town.text || 'Town' }}</mat-label>
-        <input  [disabled]="loading"
-                [(ngModel)]="user.city"
-                (ngModelChange)="getFilteredCityData()"
+        <input  formControlName="city"
                 matInput
                 [matAutocomplete]="autoCity"
                 (keydown)="keyDownEvent($event, true)"
                 placeholder="{{ localize().town.placeholder || 'Staten Island, NY' }}">
         <mat-autocomplete autoActiveFirstOption #autoCity="matAutocomplete">
           <mat-option *ngFor="let data of filteredCityData | async" [value]="data.city"
-                      (onSelectionChange)="user.zipCode = data.plz; selectionChanged = true;">
+                      (onSelectionChange)="userForm.controls['zipCode'].setValue(data.plz); selectionChanged = true;">
             {{data.plz}} {{data.city}}
           </mat-option>
         </mat-autocomplete>
@@ -98,9 +91,7 @@
     <div>
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>{{ localize().street.text || 'House No + Street' }}</mat-label>
-        <input  [disabled]="loading"
-                [(ngModel)]="user.street"
-                (ngModelChange)="getFilteredStreetData()"
+        <input  formControlName="street"
                 matInput
                 [matAutocomplete]="autoStreet"
                 (keydown)="keyDownEvent($event, !selectionChanged);"
@@ -115,6 +106,7 @@
       </mat-form-field>
     </div>
 
+  </form>
   </div>
 
   <div mat-dialog-actions class="add-user-buttons">

@@ -6,16 +6,18 @@ import { UserService } from '../services/user.service';
 import { LangService } from '../services/lang.service';
 import { PlzService, Plz, PlzRow } from '../services/plz.service';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, takeUntil, switchMap } from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
   selector: 'app-dialog-add-user',
   templateUrl: './dialog-add-user.component.html',
   styleUrls: ['./dialog-add-user.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
+
 export class DialogAddUserComponent implements OnInit, OnDestroy {
   private componentIsDestroyed$ = new Subject<boolean>();
 
@@ -36,41 +38,26 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   plzData$: Observable<Plz[]> = new Observable;
   plzData: PlzRow[] = [];
 
-  @ViewChild(MatAutocompleteTrigger) trigger:any;
+  userForm: FormGroup = this.formBuilder.group({});
+
 
   constructor(
     public userService: UserService,
     public langService: LangService,
     public plzService: PlzService,
     public dialogRef: MatDialogRef<DialogAddUserComponent>,
+    private formBuilder: FormBuilder,
     private _adapter: DateAdapter<any>,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
-    @Inject(MAT_DIALOG_DATA) private data: any) {
-    //
-    this.data = this.data || {};
-    this.user = new User(this.data.user);
-    this.userExists = this.user.id ? true : false;
-    this.birthDate = this.user.birthDate ? new Date(this.user.birthDate) : '';
-    //
-    if (!this.dialogRef.disableClose) {
-      this.dialogRef.backdropClick()
-        .pipe(takeUntil(this.componentIsDestroyed$))
-        .subscribe(e => this.onNoClick());
-    }
-    this.dialogRef.keydownEvents()
-      .pipe(takeUntil(this.componentIsDestroyed$))
-      .subscribe(e => {
-        if (e.key == 'Escape') this.onNoClick();
-      });
-  }
+    @Inject(MAT_DIALOG_DATA) private data: any) {}
 
 
   ngOnInit(): void {
-    this._locale = this.langService.getLocale();
-    this.currentLang = this.languages.indexOf(this._locale);
-    this.currentLang = this.currentLang < 0 ? 0 : this.currentLang;
-    this._locale = this.languages[this.currentLang];
-    this._adapter.setLocale(this._locale);
+    this.getUser();
+    this.modelToForm();
+    this.initPostcodeApi();
+    this.getLocale();
+    this.initDialogCloseActions();
   }
   
 
@@ -85,36 +72,45 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   }
 
 
+  getUser() {
+    this.data = this.data || {};
+    this.user = new User(this.data.user);
+    this.userExists = this.user.id ? true : false;
+    this.birthDate = this.user.birthDate ? new Date(this.user.birthDate) : '';
+  }
+
+
   saveUser() {
-    if (!this.fieldInvalid() && this.user.hasData()) {
-      this.user.birthDate = new Date(this.birthDate).getTime();
-      this.user.birthDate = !isNaN(this.user.birthDate) ? this.user.birthDate : 0;
-      this.data.user = new User(this.user);
+    if (!this.userForm.errors && this.user.hasData()) {
+      this.formToModel();
       this.userExists ? this.updateUser() : this.addUser();
+    } else {
+      this.getFormControls(this.userForm).filter(fc => fc.state.errors).forEach(fc => fc.state.markAsTouched());
+      console.log('Empty Data not written!');
     }
   }
 
 
   async addUser() {
-    this.loading = true;
+    this.isLoading(true);
     await this.userService.createUser(this.user);
-    this.loading = false;
+    this.isLoading(false);
     this.closeDialog('added');
   }
 
 
   async updateUser() {
-    this.loading = true;
+    this.isLoading(true);
     await this.userService.updateUser(this.user);
-    this.loading = false;
+    this.isLoading(false);
     this.closeDialog('updated');
   }
 
 
   async deleteUser() {
-    this.loading = true;
+    this.isLoading(true);
     await this.userService.deleteUser(this.user);
-    this.loading = false;
+    this.isLoading(false);
     this.closeDialog('deleted');
   }
 
@@ -124,43 +120,81 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   }
 
 
-  switchLang() {
-    this.currentLang = (this.currentLang + 1) % this.languages.length;
-    this._locale = this.languages[this.currentLang];
-    this.langService.setLocale(this._locale);
-    this._adapter.setLocale(this._locale);
+  modelToForm() {
+    this.userForm = this.formBuilder.group({
+      firstName: [this.user.firstName, Validators.nullValidator],
+      lastName: [this.user.lastName, Validators.required],
+      birthDate: [this.birthDate],
+      eMail: [this.user.eMail, Validators.email],
+      zipCode: [this.user.zipCode],
+      city: [this.user.city],
+      street: [this.user.street]
+    });
   }
 
 
-  localize() {
-    return this.langService.getLocalFormat(this._locale);
+  formToModel() {
+    this.getFormControls(this.userForm).forEach(fc => this.user[(fc.control  as keyof(User))] = fc.state.value);
+    this.user.birthDate = this.dateToTimestamp(this.birthDate);
+    this.data.user = new User(this.user);
   }
 
 
-  getFilteredCityData() {
-    this.filteredCityData = this.getPostDataBy('plz', this.user.city || '');
+  getFormControls(form: FormGroup) {
+    return Object.keys(form.controls).map( f => ({ control: f, state: form.controls[f] }));
   }
 
 
-  getFilteredStreetData() {
-    this.filteredStreetData = this.getPostDataBy('city', this.user.street || '');
+  dateToTimestamp(date: any) {
+    return !isNaN(new Date(date).getTime()) ? new Date(date).getTime() : 0;
   }
-  
 
-  getFilteredPostcodeData() {
-    this.filteredPlzData = this.getPostDataBy('address', this.user.zipCode || '');
+
+  isLoading(loading: boolean) {
+    this.loading = loading;
+    loading ? this.userForm.disable() : this.userForm.enable();
+  }
+
+
+
+  /*******************************
+  **  functions related to the  **
+  **  the Deutsche Post API     **
+  ********************************/
+
+  initPostcodeApi() {
+    this.filteredPlzData = this.getFilteredPostalData('zipCode', 'address');
+    this.filteredCityData = this.getFilteredPostalData('city', 'plz');
+    this.filteredStreetData = this.getFilteredPostalData('street', 'city');
+  }
+
+
+  getFilteredPostalData(field: string, findBy: string) {
+    return this.userForm.controls[field].valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((value) => this.getPostDataBy(findBy, value || '')),
+    );
   }
   
 
   getPostDataBy(by: string, value: string):Observable<PlzRow[]> {
-    return this.plzService.getPostalData(by, this.user.zipCode, this.user.city, this.user.street, this._locale)
+    const sf = this.searchField(value);
+    const key = by as keyof(object);
+    return this.plzService.getPostalData(by, sf[key]['zipCode'], sf[key]['city'], sf[key]['street'], this._locale)
       .pipe(
-        debounceTime(800),
-        distinctUntilChanged(),
         map(data => this.filterPlzData(data?.rows || [])),
         map(data => this.filterPostalData(data || [], value, by)),
-        startWith([]),
       );
+  }
+
+  searchField(value: string) {
+    return {
+      address: { zipCode: value, city: this.userForm.controls['city'].value, street: this.userForm.controls['street'].value, },
+      plz: { zipCode: this.userForm.controls['zipCode'].value, city: value, street: this.userForm.controls['street'].value, },
+      city: { zipCode: this.userForm.controls['zipCode'].value, city: this.userForm.controls['city'].value, street: value }
+    }
   }
 
 
@@ -185,7 +219,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
 
   private dataMatchesCity(data: PlzRow, value: string) {
-    const uCity = (this.user.city.toLowerCase().trim() || '');
+    const uCity = (this.userForm.controls['city'].value.toLowerCase().trim() || '');
     const dCity = data.city?.toLowerCase();
     const vCity = value.toLowerCase().trim();
     return (uCity) 
@@ -195,7 +229,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
 
   private dataMatchesStreet(data: PlzRow, value: string) {
-    const uStreet = (this.user.street.toLowerCase().trim() || '');
+    const uStreet = (this.userForm.controls['street'].value.toLowerCase().trim() || '');
     const dStreet = data.street?.toLowerCase();
     const vStreet = value.toLowerCase().trim();
     return (uStreet) 
@@ -204,8 +238,36 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   }
 
 
+
+  /*************************************
+  **  localization related functions  **
+  *************************************/
+
+  getLocale() {
+    this._locale = this.langService.getLocale();
+    this.currentLang = this.languages.indexOf(this._locale);
+    this.currentLang = this.currentLang < 0 ? 0 : this.currentLang;
+    this._locale = this.languages[this.currentLang];
+    this._adapter.setLocale(this._locale);
+  }
+
+
+  switchLang() {
+    this.currentLang = (this.currentLang + 1) % this.languages.length;
+    this._locale = this.languages[this.currentLang];
+    this.langService.setLocale(this._locale);
+    this._adapter.setLocale(this._locale);
+  }
+
+
+  localize() {
+    return this.langService.getLocalFormat(this._locale);
+  }
+
+
+
   /*******************************************
-  **  input fields focus management allow   **
+  **  input fields focus management allows  **
   **  use <Enter> Key to step through data  **
   *******************************************/
 
@@ -213,6 +275,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     if (pristine) this.checkKeyboardInput(e, e.key, e.target as HTMLElement);
     this.selectionChanged = false;
   }
+
 
   checkKeyboardInput(e: KeyboardEvent, key: string, el: HTMLElement) {
     if (key == 'Enter' && el.id) {
@@ -222,32 +285,40 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     }
   }
 
+
   inputFields() {
     return [... document.querySelectorAll('.dialog-container input') as any].filter(el => el.id).map(el => el.id)
       .concat(['save-user-button']);
   }
 
 
-  /***********************************
-  **  final input field validation  **
-  **  before data record is saved   **
-  ***********************************/
 
-  fieldInvalid(): boolean {
-    let firstInvalidField: any = null;
-    document.querySelectorAll('.dialog-container .mat-form-field').forEach(field => {
-      const input = field.querySelector('input');
-      firstInvalidField = this.handleValidityState(input, field, firstInvalidField);
-    });
-    if (firstInvalidField) firstInvalidField.focus();
-    return firstInvalidField ? true : false;
+  /*********************************
+  **  setup allowed user actions  **
+  **  that will close the dialog  **
+  *********************************/
+
+  initDialogCloseActions() {
+    this.closeOnBackdropClick();
+    this.closeOnEscapeKey();
   }
 
-  handleValidityState(input: HTMLInputElement | null, field: Element, firstInvalid: any) {
-    const validityState = input ? input.validity.valid : true;
-    field.classList.toggle('mat-form-field-invalid', !validityState);
-    input?.blur(), input?.focus();
-    return firstInvalid ? firstInvalid : (validityState ? firstInvalid : input);
+
+  closeOnBackdropClick() {
+    if (!this.dialogRef.disableClose) {
+      this.dialogRef.backdropClick()
+        .pipe(takeUntil(this.componentIsDestroyed$))
+        .subscribe(e => this.onNoClick());
+    }
+  }
+
+
+  closeOnEscapeKey() {
+    this.dialogRef.keydownEvents()
+      .pipe(takeUntil(this.componentIsDestroyed$))
+      .subscribe(e => {
+        if (e.key == 'Escape') this.onNoClick();
+      });
   }
 
 }

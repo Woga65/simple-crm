@@ -34,7 +34,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   firstTableRow: ElementRef<HTMLTableRowElement> | any;
   tableObserver!: MutationObserver;
   changedRowId: string = '';
-  dialogLostFocus: boolean = false;
+  forceFocus: boolean = false;
   filterValue: string = '';
 
   // the letters available for marking a data record using the mouse   
@@ -108,13 +108,12 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
 
   openDialog(user: User = new User) {
-    this.dialogLostFocus = false;
+    this.forceFocus = false;
     const dialogRef = this.dialog.open(DialogAddUserComponent, { data: { user: user }, disableClose: true });
     dialogRef.afterClosed().pipe(take(1)).subscribe(res => {
       if (res) {
         this.showMapEvent.emit({ data: res.user || user });
       }
-      this.dialogLostFocus = true;
     });
   }
 
@@ -206,7 +205,6 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
    * @param { number } row - the number of the row that has been clicked
    */
   editUserByMouse(userData: User, row: number) {
-    this.dialogLostFocus = false;
     if (this.changedRowId == `row-${row}`) this.editUser(userData.id);
     this.changedRowId = `row-${row}`;
   }
@@ -227,7 +225,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
    */
   checkKeys(e: KeyboardEvent, id: any, row: any = 0) {
     this.changedRowId = '';
-    this.dialogLostFocus = true;
+    this.forceFocus = true;
     const el = this.getTableElements(e.target as HTMLElement);
     const pg: MatPaginator = this.paginator;
     const modifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey || e.key == "AltGraph";
@@ -369,7 +367,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   }
 
   ngAfterViewChecked(): void {
-    if (this.changedRowId && this.dialogLostFocus) {
+    if (this.changedRowId && this.forceFocus) {
       document.getElementById(this.changedRowId)?.focus();
     }
   }

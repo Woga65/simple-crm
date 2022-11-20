@@ -5,14 +5,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
+// Generic localization
 import localeDE from '@angular/common/locales/de';
-import localeEnGb from '@angular/common/locales/en-GB';
+import localeEnGB from '@angular/common/locales/en-GB';
 registerLocaleData(localeDE, 'de');
-registerLocaleData(localeEnGb, 'en-gb');
+registerLocaleData(localeEnGB, 'en-gb');
 
 // Material Design
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -75,7 +75,6 @@ import { OsmMapComponent } from './osm-map/osm-map.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     MatToolbarModule,
