@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, QueryList, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, QueryList, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { User } from 'src/models/user.class';
@@ -11,15 +11,15 @@ import { BaseChartDirective } from 'ng2-charts';
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default,
 })
-export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+
+export class DashboardComponent implements OnInit, OnDestroy {
   private componentIsDestroyed$ = new Subject<boolean>();
 
   @ViewChildren(BaseChartDirective) charts!:QueryList<BaseChartDirective>;
 
   user: User = new User();
-  users$: Observable<User[]>;
   users: User[] = [];
   ages: number[] = [];
   markers: number[] = [];
@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     { legend: '>= 60', from: 60, to: 99 },
   ];
 
-  markStats = [ 'N/A', 'A', 'B', 'C', 'D', 'E-Z']
+  markStats = [ 'N/A', 'A', 'B', 'C', 'D', 'E-Z'];
 
   ageChartData = [ { data: [] } ];
   markChartData = [ { data: [] } ];
@@ -49,20 +49,20 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         onHover: e => e.native ? (e.native.target as HTMLElement).style.cursor = 'pointer' : false,
         onLeave: e => e.native ? (e.native.target as HTMLElement).style.cursor = 'default' : false,
         position: 'top', align: 'center',
-      },
-      
+      },      
     }
-
   };
 
 
   constructor(
     public userService: UserService,
     public langService: LangService,
-  ) {
-  
-    this.users$ = this.userService.getUserList() as Observable<User[]>;
-    this.users$.pipe(
+  ) {}
+
+
+  ngOnInit(): void {
+    (this.userService.getUserList() as Observable<User[]>)
+    .pipe(
       takeUntil(this.componentIsDestroyed$),
       map(usr => this.prepareUserStatistics(usr))
     ).subscribe(userData => {
@@ -71,17 +71,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
-    console.log(this.langService.getLocale());
-  }
-
-  ngAfterViewInit(): void {
-  }
 
   ngOnDestroy(): void {
     this.componentIsDestroyed$.next(true);
     this.componentIsDestroyed$.complete();
   }
+
 
   prepareUserStatistics(user: User[]): User[] {
     this.ages = new Array(100).fill(0);
@@ -97,20 +92,24 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+
   showUserStatistics() {
     this.ageStats.forEach( (s: any, index: number) => {
       this.ageChartLabels[index] = s.legend;
-      (this.ageChartData[0].data[index] as number) = this.ages.filter((n, i) => i >= s.from && i <= s.to).reduce((t, v) => t + v);
+      (this.ageChartData[0].data[index] as number) = this.ages
+        .filter((n, i) => i >= s.from && i <= s.to).reduce((t, v) => t + v);
     });
     this.markChartLabels = this.markStats;
     (this.markChartData[0].data as number[]) = this.markers;
     this.charts.forEach(chart => chart.update());   //chart.chart?.update());
   }
 
+
   calculateAge(birthDate: string | number) {
       const diffMillies = Date.now() - new Date(birthDate).getTime();
       return birthDate ? Math.abs(new Date(diffMillies).getUTCFullYear() - 1970) : 0;
   }
+
 
   localize() {
     return this.langService.getLocalFormat();
