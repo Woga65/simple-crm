@@ -47,6 +47,7 @@ import { environment } from '../environments/environment';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
 
 // Charts
 import { NgChartsModule } from 'ng2-charts';
@@ -100,6 +101,7 @@ import { OsmMapComponent } from './osm-map/osm-map.component';
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
     provideFirestore(() => getFirestore()),
+    NgxAuthFirebaseUIModule.forRoot(environment.firebase),
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: navigator.language },

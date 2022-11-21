@@ -158,8 +158,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
   filterUserData(user: User[], f: string): User[] {
     return user.filter(u => {
-      for (const prop in u) 
+      for (const prop in u) {
         if (prop != 'id' && (u[prop as keyof User] as string).toLowerCase().includes(f)) return true;
+      }
       return false;
     });
   }

@@ -76,13 +76,14 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
     this.data = this.data || {};
     this.user = new User(this.data.user);
     this.userExists = this.user.id ? true : false;
+    console.log(this.user.birthDate);
     this.birthDate = this.user.birthDate ? new Date(this.user.birthDate) : '';
   }
 
 
   saveUser() {
+    this.formToModel();
     if (!this.userForm.errors && this.user.hasData()) {
-      this.formToModel();
       this.userExists ? this.updateUser() : this.addUser();
     } else {
       this.getFormControls(this.userForm).filter(fc => fc.state.errors).forEach(fc => fc.state.markAsTouched());
@@ -135,7 +136,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
   formToModel() {
     this.getFormControls(this.userForm).forEach(fc => this.user[(fc.control  as keyof(User))] = fc.state.value);
-    this.user.birthDate = this.dateToTimestamp(this.birthDate);
+    this.user.birthDate = this.dateToTimestamp(this.userForm.controls['birthDate'].value);
     this.data.user = new User(this.user);
   }
 

@@ -21,7 +21,8 @@
               "moment/locale/ja",
               "moment/locale/fr",
               "moment/locale/de",
-              "moment/locale/en-gb"
+              "moment/locale/en-gb",
+              "leaflet"
             ],
             "outputPath": "dist/simple-crm",
             "index": "src/index.html",
@@ -35,7 +36,12 @@
               {
                 "glob": "**/*",
                 "input": "./node_modules/leaflet/dist/images",
-                "output": "assets/"
+                "output": "./assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/ngx-auth-firebaseui/assets",
+                "output": "./assets/"
               }
             ],
             "styles": [
@@ -50,7 +56,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2.5mb",
+                  "maximumWarning": "3.0mb",
                   "maximumError": "4mb"
                 },
                 {

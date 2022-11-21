@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { User } from 'src/models/user.class';
 import { Firestore, collectionData, collection, CollectionReference, WhereFilterOp, Query, QueryConstraint, orderBy } from '@angular/fire/firestore';
 import { DocumentData, onSnapshot, getDoc, setDoc, updateDoc, deleteDoc, doc, query, where } from '@angular/fire/firestore';
-//import { query } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +11,7 @@ export class UserService {
   coll: CollectionReference<DocumentData>;
 
   constructor(private firestore: Firestore) {
-    this.coll = collection(this.firestore, 'users');
+    this.coll = collection(this.firestore, 'address');
   }
 
 
