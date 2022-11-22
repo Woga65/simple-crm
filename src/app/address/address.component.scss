@@ -1,4 +1,4 @@
-.add-user-button {
+.add-addr-button {
     position: fixed;
     right: calc(var(--font-size) * 3.5);
     bottom: calc(var(--font-size) * 3.5);
@@ -38,23 +38,23 @@ mat-card {
     width: 100%;
 
 
-    .user-col-1 {
+    .addr-col-1 {
         width: 10%;
     }
 
-    .user-col-2 {
+    .addr-col-2 {
         width: 15%;
     }
 
-    .user-col-3 {
+    .addr-col-3 {
         width: 16.67%;
     }
 
-    .user-col-4 {
+    .addr-col-4 {
         width: 30.0%;
     }
 
-    .user-col-5 {
+    .addr-col-5 {
         width: 33.33%;
     }
 

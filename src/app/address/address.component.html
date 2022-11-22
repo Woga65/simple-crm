@@ -1,7 +1,7 @@
-<button class="add-user-button" (click)="newUser()"
+<button class="add-addr-button" (click)="newAddress()"
         mat-fab color="primary" 
         aria-label="button with a plus icon" 
-        matTooltip="add user"
+        matTooltip="add address"
         matTooltipPosition="above">
     <mat-icon>add</mat-icon>
 </button>
@@ -12,7 +12,7 @@
     (keyup)="applyFilter($event); checkModifiedKeys($event, '', 0);" 
     (click)="filterInputClicked($event)" 
     (focus)="tableObserver.disconnect()" 
-    (blur)="tableObserver = observeUserTable()">
+    (blur)="tableObserver = observeAddressTable()">
 </div>
 
 
@@ -22,11 +22,11 @@
     <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortChange($event)">
 
     <colgroup>
-        <col span="1" class="user-col-1">
-        <col span="1" class="user-col-2">
-        <col span="1" class="user-col-2">
-        <col span="1" class="user-col-4">
-        <col span="1" class="user-col-4">
+        <col span="1" class="addr-col-1">
+        <col span="1" class="addr-col-2">
+        <col span="1" class="addr-col-2">
+        <col span="1" class="addr-col-4">
+        <col span="1" class="addr-col-4">
     </colgroup>
   
     <!-- Row Count Column -->
@@ -38,32 +38,32 @@
     <!-- First Name Column -->
     <ng-container matColumnDef="firstName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> {{localize().firstName.text || 'First Name'}} </span> </th>
-      <td mat-cell *matCellDef="let user"> {{ user.firstName }} </td>
+      <td mat-cell *matCellDef="let addr"> {{ addr.firstName }} </td>
   </ng-container>
 
     <!-- Last Name Column -->
     <ng-container matColumnDef="lastName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> {{localize().table.fullName || 'Last Name'}} </span> </th>
-        <td mat-cell *matCellDef="let user"> {{ user.lastName }} </td> <!--{{ user.firstName ? ', ' + user.firstName : '' }} </td>-->
+        <td mat-cell *matCellDef="let addr"> {{ addr.lastName }} </td> <!--{{ addr.firstName ? ', ' + addr.firstName : '' }} </td>-->
     </ng-container>
   
     <!-- E-Mail Column -->
     <ng-container matColumnDef="eMail">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> {{localize().table.eMail || 'E-Mail'}} </span> </th>
-        <td mat-cell *matCellDef="let user"> {{user.eMail}} </td>
+        <td mat-cell *matCellDef="let addr"> {{addr.eMail}} </td>
     </ng-container>
   
     <!-- Adress Column -->
     <ng-container matColumnDef="city">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> <span class="ta-left"> {{localize().table.address || 'Address'}} </span> </th>
-        <td mat-cell *matCellDef="let user"> {{user.zipCode}} {{user.city}}, {{user.street}} </td>
+        <td mat-cell *matCellDef="let addr"> {{addr.zipCode}} {{addr.city}}, {{addr.street}} </td>
     </ng-container>
       
     <!-- Marker Column -->
     <ng-container matColumnDef="marker">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> M </th>
-      <td mat-cell *matCellDef="let user; let i=index;"
-          (click)="markUserByMouse(user.id, user.marker?.charAt(1) || ' ', i, $event)"> {{user.marker?.charAt(1) || ''}} </td>
+      <td mat-cell *matCellDef="let addr; let i=index;"
+          (click)="markAddressByMouse(addr.id, addr.marker?.charAt(1) || ' ', i, $event)"> {{addr.marker?.charAt(1) || ''}} </td>
     </ng-container>
   
     <!-- Header Row -->
@@ -71,10 +71,10 @@
 
     <!-- Data Rows -->
       <tr tabindex="1" mat-row *matRowDef="let row; let i=index; columns: displayedColumns;" id="row-{{i}}"
-        (click)="editUserByMouse(row, i)"
+        (click)="editAddressByMouse(row, i)"
         (keydown)="checkKeys($event, row.id, i)"
         (keyup)="checkModifiedKeys($event, row.id, i)"
-        (focus)="userFocussed($event, row, i)">
+        (focus)="addressFocussed($event, row, i)">
       </tr>
     </table>
   </div>  
@@ -85,7 +85,7 @@
                 [pageSize]="10"
                 [pageIndex]="pageIndex"
                 showFirstLastButtons 
-                aria-label="Select page of users">
+                aria-label="Select page of addresses">
 </mat-paginator>
 
   

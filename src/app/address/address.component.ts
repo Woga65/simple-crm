@@ -1,30 +1,31 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, AfterViewChecked, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { AfterViewChecked, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil, take } from 'rxjs/operators';
-import { User } from 'src/models/user.class';
-import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
+import { Addr } from 'src/models/addr.class';
+import { DialogAddAddressComponent } from '../dialog-add-address/dialog-add-address.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
-import { UserService } from '../services/user.service';
+import { AddrService } from '../services/addr.service';
 import { LangService } from '../services/lang.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 
 @Component({
-  selector: 'app-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss'],
+  selector: 'app-address',
+  templateUrl: './address.component.html',
+  styleUrls: ['./address.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+export class AddressComponent implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
   private componentIsDestroyed$ = new Subject<boolean>();
   private dataFilterChanged$ = new Subject<boolean>();
 
-  user: User = new User();
-  users: User[] = [];
+  address: Addr = new Addr();
+  addresses: Addr[] = [];
 
   displayedColumns: string[] = ['position', 'firstName', 'lastName', 'eMail', 'city', 'marker'];
   dataSource: any;    // MatTableDataSource
@@ -46,7 +47,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   showMapEvent = new EventEmitter();
 
   constructor(public dialog: MatDialog, 
-    public userService: UserService,
+    public addrService: AddrService,
     private _liveAnnouncer: LiveAnnouncer,
     public langService: LangService,
   ) { }
@@ -57,8 +58,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
 
 
   ngAfterViewInit() {
-    this.tableObserver = this.observeUserTable();
-    this.initUsersList();
+    this.tableObserver = this.observeAddressTable();
+    this.initAddressList();
     this.changedRowId = 'row-0';
   }
 
@@ -75,52 +76,55 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   }
 
  
-  newUser() {
-    this.openDialog(new User);
+  newAddress() {
+    this.openDialog(new Addr);
+    this.changedRowId = 'row-0';
   }
 
 
-  async editUser(userId: string) {
-    await this.getUser(userId);
-    this.openDialog(this.user);
+  async editAddress(addrId: string) {
+    await this.getAddress(addrId);
+    this.openDialog(this.address);
   }
 
 
-  async markUser(userId: string, marker: string) {
+  async markAddress(addrId: string, marker: string) {
     const m = (marker && marker == ' ') ? '' : '=' + marker.toUpperCase();
-    await this.getUser(userId);
-    this.user.marker = m;
-    await this.userService.updateUser(this.user);
-    console.log('user marked: ', userId, '/', marker);
+    await this.getAddress(addrId);
+    this.address.marker = m;
+    await this.addrService.updateAddr(this.address);
+    console.log('address marked: ', addrId, '/', marker);
   }
 
 
-  async getUser(userId: string) {
-    this.user = new User(await this.userService.getUserDoc(userId));
-    console.log('user read: ', this.user.toJSON());
+  async getAddress(addrId: string) {
+    this.address = new Addr(await this.addrService.getAddrDoc(addrId));
+    console.log('address read: ', this.address.toJSON());
   }
 
 
-  openDialog(user: User = new User) {
+  openDialog(addr: Addr = new Addr) {
     this.forceFocus = false;
-    const dialogRef = this.dialog.open(DialogAddUserComponent, { data: { user: user }, disableClose: true });
+    const dialogRef = this.dialog.open(DialogAddAddressComponent, { data: { address: addr }, disableClose: true });
     dialogRef.afterClosed().pipe(take(1)).subscribe(res => {
-      if (res) {
-        this.showMapEvent.emit({ data: res.user || user });
+      if (res && res.address.id) {
+        this.showMapEvent.emit({ data: res.address || addr });
+      } else {
+        this.forceFocus = true;
       }
     });
   }
 
 
-  initUsersList() {
-    this.getUsersList().subscribe(userData => {
-      console.log('Neue Daten sind verfügbar: ', userData);
-      this.users = this.filterUserData(userData, this.filterValue);
-      this.dataSource = new MatTableDataSource(this.users);
-      this.dataSource.sortingDataAccessor = ((row:User, name:string) => {
+  initAddressList() {
+    this.getAddressList().subscribe(addrData => {
+      console.log('Neue Daten sind verfügbar: ', addrData);
+      this.addresses = this.filterAddressData(addrData, this.filterValue);
+      this.dataSource = new MatTableDataSource(this.addresses);
+      this.dataSource.sortingDataAccessor = ((row:Addr, name:string) => {
         return (name == 'marker' && !row.marker)
           ? ( this.dataSource.sort.direction == 'asc' ? '=z' : '= ' ) 
-          : row[name as keyof User];
+          : row[name as keyof Addr];
       });
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -128,11 +132,11 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   }
 
 
-  getUsersList() {
-    return (this.userService.getUserList() as Observable<User[]>)
+  getAddressList() {
+    return (this.addrService.getAddrList() as Observable<Addr[]>)
       .pipe(
         takeUntil(this.componentIsDestroyed$ && this.dataFilterChanged$),
-        map(usr => this.userBirthDateToString(usr))
+        map(addr => this.addrBirthDateToString(addr))
       );
   }
 
@@ -152,30 +156,30 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     this.filterValue = filterValue.trim().toLowerCase() ;
     this.dataFilterChanged$.next(true);
     this.dataFilterChanged$.complete();
-    this.initUsersList();
+    this.initAddressList();
   }
 
 
-  filterUserData(user: User[], f: string): User[] {
-    return user.filter(u => {
-      for (const prop in u) {
-        if (prop != 'id' && (u[prop as keyof User] as string).toLowerCase().includes(f)) return true;
+  filterAddressData(addr: Addr[], f: string): Addr[] {
+    return addr.filter(a => {
+      for (const prop in a) {
+        if (prop != 'id' && (a[prop as keyof Addr] as string).toLowerCase().includes(f)) return true;
       }
       return false;
     });
   }
 
 
-  userBirthDateToString(user: User[]): User[] {
-    return user.map(u => {
-      u.birthDate = u.birthDate ? new Date(u.birthDate).toDateString() : '';
-      return u;
+  addrBirthDateToString(addr: Addr[]): Addr[] {
+    return addr.map(a => {
+      a.birthDate = a.birthDate ? new Date(a.birthDate).toDateString() : '';
+      return a;
     });
   }
 
 
-  userFocussed(ev:any, userData: User, row: number) {
-    this.showMapEvent.emit({ data: userData });
+  addressFocussed(ev:any, addrData: Addr, row: number) {
+    this.showMapEvent.emit({ data: addrData });
   }
 
 
@@ -183,30 +187,30 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
    * Mark a data record with a single letter 
    * by clicking the marker-column
    * 
-   * @param { string } userId - the user's Id 
-   * @param { string } m - the letter, the user was marked before 
+   * @param { string } addrId - the address Id 
+   * @param { string } m - the letter, the addr was marked before 
    * @param { number } row - the number of the row that has been clicked 
    * @param { Event } ev - mouse event 
    */
-  markUserByMouse(userId: string, m:string, row: number, ev:any) {
+  markAddressByMouse(addrId: string, m:string, row: number, ev:any) {
     ev.stopPropagation();
     const mIndex = this.markers.indexOf(m) == -1 ? 0 : this.markers.indexOf(m);
     const marker = mIndex < this.markers.length - 1 ? this.markers.charAt(mIndex + 1) : this.markers.charAt(0);
     this.changedRowId = `row-${row}`;
-    this.markUser(userId, marker);
+    this.markAddress(addrId, marker);
   }
 
 
   /**
-   * if the table row already was focussed, edit the user 
+   * if the table row already was focussed, edit the addr 
    * represented by that specific table row. Otherwise
    * move the focus to that specific row.
    * 
-   * @param { string } userData - the user's Record
+   * @param { string } addrData - the addr's Record
    * @param { number } row - the number of the row that has been clicked
    */
-  editUserByMouse(userData: User, row: number) {
-    if (this.changedRowId == `row-${row}`) this.editUser(userData.id);
+  editAddressByMouse(addrData: Addr, row: number) {
+    if (this.changedRowId == `row-${row}`) this.editAddress(addrData.id);
     this.changedRowId = `row-${row}`;
   }
 
@@ -220,9 +224,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
    * table by keyboard
    * 
    * @param { KeyboardEvent } e 
-   * @param { string } id - user Id
+   * @param { string } id - address Id
    * @param { number } row - row number 
-   * @returns - undefined
    */
   checkKeys(e: KeyboardEvent, id: any, row: any = 0) {
     this.changedRowId = '';
@@ -230,17 +233,17 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     e.stopPropagation();
     if (this.letterKeyPressed(e.code) || this.isUmlaut(e.key)) {
       e.preventDefault();
-      this.markUserIfValidLetter(id, row, e);
+      this.markAddressIfValidLetter(id, row, e);
     } else {
       this.checkNavigationKeys(id, row, e);
     }
   }
 
 
-  private markUserIfValidLetter(id: any, row: any, e: KeyboardEvent) {
+  private markAddressIfValidLetter(id: any, row: any, e: KeyboardEvent) {
     if (!this.isUmlaut(e.key) && !this.modifier(e)) {
       this.changedRowId = `row-${row}`;
-      this.markUser(id, e.key);
+      this.markAddress(id, e.key);
     }
   }
 
@@ -268,7 +271,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
     if (e.altKey && e.code == 'KeyN') {
       e.preventDefault();
       e.stopImmediatePropagation();
-      this.newUser();
+      this.newAddress();
     }
   }
 
@@ -291,9 +294,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   }
 
 
-  private edit(userId: string, row: number) {
+  private edit(addrId: string, row: number) {
     this.changedRowId = `row-${row}`;
-    this.editUser(userId);
+    this.editAddress(addrId);
   }
 
 
@@ -353,7 +356,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
    * 
    * @returns { MutationObserver } 
    */
-  observeUserTable(): MutationObserver {
+  observeAddressTable(): MutationObserver {
     const table: HTMLTableElement | any = document.querySelector('table');
     const options = { childList: true, subtree: true };
     const observer = new MutationObserver(this.observerCallback.bind(this));
@@ -410,8 +413,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy, AfterVie
   /*
   for queries / server side filtering:
   
-  getUsersList() {
-    return (this.userService.selectFromUserWhere('marker', '>=', '=A', 'desc') as Observable<User[]>)
+  getAddressList() {
+    return (this.addrService.selectFromAddrWhere('marker', '>=', '=A', 'desc') as Observable<Addr[]>)
       .pipe(...);
   }
   */

@@ -51,7 +51,7 @@ export class LangService implements OnInit{
   private deFormat(): any {
     this.lang = this._locale = 'de';
     return {
-      age: 'J.', byAge: 'nach Alter', byCategory: 'Kategorie', add: 'hinzufügen', stats: 'Statistik', users: 'Adressen',
+      age: 'J.', byAge: 'nach Alter', byCategory: 'Kategorie', add: 'hinzufügen', stats: 'Statistik', addresses: 'Adressen',
       table: { title: 'Nutzerliste', fullName: 'Name', eMail: 'E-Mail', address: 'Adresse' },
       form: { title: 'Nutzer hinzufügen', cancel: 'abbrechen', save: 'speichern', lang: 'Deutsch (DE)' },
       update: { title: 'Nutzer bearbeiten', delete: 'löschen' },
@@ -68,7 +68,7 @@ export class LangService implements OnInit{
 
   private usFormat(): any {
     return {
-      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
+      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add address', stats: 'Statistics', addresses: 'Addresses',
       table: {}, form: { lang: 'English (US)' }, update: {}, firstName: {}, 
       lastName: {}, birthDate: { hint: 'MM/DD/YYYY' }, eMail: {},
       street: {}, zipCode: {}, town: {},
@@ -79,7 +79,7 @@ export class LangService implements OnInit{
   private gbFormat(): any {
     this.lang = this._locale = 'en-gb';
     return {
-      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
+      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add address', stats: 'Statistics', addresses: 'Addresses',
       table: {}, form: { lang: 'English (GB)' }, update: {}, firstName: { placeholder: 'John' }, 
       lastName: { placeholder: 'Smith' }, birthDate: { hint: 'DD/MM/YYYY' }, 
       eMail: { placeholder: 'john@smith.co.uk' }, street: { text: 'House No + Street',
@@ -92,7 +92,7 @@ export class LangService implements OnInit{
   private jpFormat(): any {
     this.lang = this._locale = 'en-US';
     return {
-      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
+      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add address', stats: 'Statistics', addresses: 'Addresses',
       table: {}, form: { lang: 'English (JP)' }, update: {}, firstName: {},
       lastName: {}, birthDate: { hint: 'YYYY/MM/DD' }, eMail: {},
       street: {}, zipCode: {}, town: {},
@@ -103,7 +103,7 @@ export class LangService implements OnInit{
   private defaultFormat(): any {
     this.lang = this._locale = 'en-US';
     return {
-      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add user', stats: 'Statistics', users: 'Addresses',
+      age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add address', stats: 'Statistics', addresses: 'Addresses',
       table: {}, form: { lang: 'English (US)' }, update: {},
       firstName: {}, lastName: {}, birthDate: { hint: '' },
       eMail: {}, street: {}, zipCode: {}, town: {},

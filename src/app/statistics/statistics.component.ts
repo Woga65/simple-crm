@@ -1,26 +1,26 @@
 import { Component, OnInit, OnDestroy, QueryList, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-import { User } from 'src/models/user.class';
-import { UserService } from '../services/user.service';
+import { Addr } from 'src/models/addr.class';
+import { AddrService } from '../services/addr.service';
 import { LangService } from '../services/lang.service';
 import { ChartEvent, ChartOptions, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  selector: 'app-statistics',
+  templateUrl: './statistics.component.html',
+  styleUrls: ['./statistics.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
 
-export class DashboardComponent implements OnInit, OnDestroy {
+export class StatisticsComponent implements OnInit, OnDestroy {
   private componentIsDestroyed$ = new Subject<boolean>();
 
   @ViewChildren(BaseChartDirective) charts!:QueryList<BaseChartDirective>;
 
-  user: User = new User();
-  users: User[] = [];
+  addr: Addr = new Addr();
+  addresses: Addr[] = [];
   ages: number[] = [];
   markers: number[] = [];
 
@@ -55,19 +55,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    public userService: UserService,
+    public addrService: AddrService,
     public langService: LangService,
   ) {}
 
 
   ngOnInit(): void {
-    (this.userService.getUserList() as Observable<User[]>)
+    (this.addrService.getAddrList() as Observable<Addr[]>)
     .pipe(
       takeUntil(this.componentIsDestroyed$),
-      map(usr => this.prepareUserStatistics(usr))
-    ).subscribe(userData => {
-      this.users = userData;
-      this.showUserStatistics();
+      map(addr => this.prepareAddrStatistics(addr))
+    ).subscribe(addrData => {
+      this.addresses = addrData;
+      this.showAddrStatistics();
     });
   }
 
@@ -78,10 +78,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
 
-  prepareUserStatistics(user: User[]): User[] {
+  prepareAddrStatistics(addr: Addr[]): Addr[] {
     this.ages = new Array(100).fill(0);
     this.markers = new Array(6).fill(0);
-    return user.map(u => {
+    return addr.map(u => {
       const age = this.calculateAge(u.birthDate);
       this.ages[age]++;
       const mark = (u.marker) ? u.marker.charCodeAt(1) - 64 : 0;
@@ -93,7 +93,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
 
-  showUserStatistics() {
+  showAddrStatistics() {
     this.ageStats.forEach( (s: any, index: number) => {
       this.ageChartLabels[index] = s.legend;
       (this.ageChartData[0].data[index] as number) = this.ages

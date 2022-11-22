@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDrawerMode } from '@angular/material/sidenav';
 import { Observable, Subscription } from 'rxjs';
-import { User } from 'src/models/user.class';
-import { UserComponent } from './user/user.component';
+import { Addr } from 'src/models/addr.class';
+import { AddressComponent } from './address/address.component';
 import { LangService } from './services/lang.service';
 import { GeocodeService, GeoResult } from './services/geocode.service';
 import { take } from 'rxjs';
 import { Map } from 'leaflet';
+import { Auth, User as AfUser } from '@angular/fire/auth';
 
 
 @Component({
@@ -15,16 +16,16 @@ import { Map } from 'leaflet';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'simple-crm';
   navOpen: boolean = true;
   navMode: MatDrawerMode = 'side';
 
   subscription: Subscription = Subscription.EMPTY;
-  userComponent: UserComponent | any = null; 
-  fromUserComponent: boolean = false;
-  userComponentLoaded: boolean = false;
-  userData: User = new User();
+  addressComponent: AddressComponent | any = null; 
+  fromAddressComponent: boolean = false;
+  addressComponentLoaded: boolean = false;
+  addrData: Addr = new Addr();
 
   geoData$: Subscription = Subscription.EMPTY;      // Observable<GeoResult> | Subscribable<GeoResult>;
   geoData: GeoResult = { spatialReference: {}, locations: [] };
@@ -33,17 +34,32 @@ export class AppComponent {
   zoom: number = 0;
   mapCenter = { x: 0, y: 0, z: 0, text: '' };
 
+  loggedIn: boolean = false;
+
   constructor(
     public geocodeService: GeocodeService,
     public langService: LangService,
+    private afAuth: Auth 
     ) {}
 
 
+  ngOnInit(): void {
+    this.afAuth.onAuthStateChanged(this.loginChanged.bind(this));
+  }
+
+
+  loginChanged(afUser: AfUser | null) {
+    this.loggedIn = !!afUser;
+    console.log('logged in: ', this.loggedIn);
+    console.log('afUser: ', afUser?.toJSON());
+  }
+
+
   subscribeToEmitter(componentRef:any) {
-    this.userComponentLoaded = this.fromUserComponent = false;
-    if (componentRef instanceof UserComponent) {
-      this.userComponent = componentRef;
-      this.userComponentLoaded = true;
+    this.addressComponentLoaded = this.fromAddressComponent = false;
+    if (componentRef instanceof AddressComponent) {
+      this.addressComponent = componentRef;
+      this.addressComponentLoaded = true;
       this.subscription = this.geoLocationSubscription();
     }
   }
@@ -67,22 +83,22 @@ export class AppComponent {
 
 
   geoLocationSubscription() {
-    return this.userComponent.showMapEvent.subscribe( (e:any) => {
-      this.fromUserComponent = this.userComponentLoaded = true; // e['fromUserList'];
-      this.userData = e['data'];
-      this.geoData$ = (this.geocodeService.getLocationByAddress(this.userData.zipCode, this.userData.city, this.userData.street) as Observable<GeoResult>)
+    return this.addressComponent.showMapEvent.subscribe( (e:any) => {
+      this.fromAddressComponent = this.addressComponentLoaded = true; // e['fromAddressList'];
+      this.addrData = e['data'];
+      this.geoData$ = (this.geocodeService.getLocationByAddress(this.addrData.zipCode, this.addrData.city, this.addrData.street) as Observable<GeoResult>)
         .pipe(take(1))
-        .subscribe(geoData => this.geoData = this.showUsersLocation(geoData));
+        .subscribe(geoData => this.geoData = this.showAddressLocation(geoData));
     });
   }
 
 
-  showUsersLocation(geoData:GeoResult) {
+  showAddressLocation(geoData:GeoResult) {
     if (this.map) {
       this.mapCenter = this.getMapCenter(
         (geoData.locations[0]?.feature?.geometry?.x) || 0, 
         (geoData.locations[0]?.feature?.geometry?.y) || 0,
-        `${ this.userData.firstName } ${ this.userData.lastName }`.trim()
+        `${ this.addrData.firstName } ${ this.addrData.lastName }`.trim()
       );
     };
     return geoData;

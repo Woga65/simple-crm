@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { UserComponent } from './user/user.component';
-import { UserDetailsComponent } from './user-details/user-details.component';
+import { StatisticsComponent } from './statistics/statistics.component';
+import { AddressComponent } from './address/address.component';
+import { AddressDetailsComponent } from './address-details/address-details.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'user', component: UserComponent },
-  { path: 'user/:id', component: UserDetailsComponent },
+  { path: '', component: StatisticsComponent },
+  { path: 'statistics', component: StatisticsComponent },
+  { path: 'address', component: AddressComponent },
+  { path: 'address/:id', component: AddressDetailsComponent },
 ];
 
 @NgModule({

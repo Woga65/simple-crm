@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { User } from 'src/models/user.class';
-import { UserService } from '../services/user.service';
+import { Addr } from 'src/models/addr.class';
+import { AddrService } from '../services/addr.service';
 import { LangService } from '../services/lang.service';
 import { PlzService, Plz, PlzRow } from '../services/plz.service';
 import { Observable, Subject } from 'rxjs';
@@ -11,13 +11,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
-  selector: 'app-dialog-add-user',
-  templateUrl: './dialog-add-user.component.html',
-  styleUrls: ['./dialog-add-user.component.scss'],
+  selector: 'app-dialog-add-Address',
+  templateUrl: './dialog-add-address.component.html',
+  styleUrls: ['./dialog-add-address.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
 
-export class DialogAddUserComponent implements OnInit, OnDestroy {
+export class DialogAddAddressComponent implements OnInit, OnDestroy {
   private componentIsDestroyed$ = new Subject<boolean>();
 
   selectionChanged: boolean = false;
@@ -30,21 +30,21 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   languages: string[] = ['en-US', 'de', 'en-gb'];
   loading: boolean = false;
 
-  user: User = new User();
+  address: Addr = new Addr();
   birthDate: Date | any = new Date;
-  userExists: boolean = false;
+  addrExists: boolean = false;
 
   plzData$: Observable<Plz[]> = new Observable;
   plzData: PlzRow[] = [];
 
-  userForm: FormGroup = this.formBuilder.group({});
+  addrForm: FormGroup = this.formBuilder.group({});
 
 
   constructor(
-    public userService: UserService,
+    public addrService: AddrService,
     public langService: LangService,
     public plzService: PlzService,
-    public dialogRef: MatDialogRef<DialogAddUserComponent>,
+    public dialogRef: MatDialogRef<DialogAddAddressComponent>,
     private formBuilder: FormBuilder,
     private _adapter: DateAdapter<any>,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
@@ -52,7 +52,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.getUser();
+    this.getAddr();
     this.modelToForm();
     this.initPostcodeApi();
     this.getLocale();
@@ -71,72 +71,71 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
   }
 
 
-  getUser() {
+  getAddr() {
     this.data = this.data || {};
-    this.user = new User(this.data.user);
-    this.userExists = this.user.id ? true : false;
-    console.log(this.user.birthDate);
-    this.birthDate = this.user.birthDate ? new Date(this.user.birthDate) : '';
+    this.address = new Addr(this.data.address);
+    this.addrExists = this.address.id ? true : false;
+    this.birthDate = this.address.birthDate ? new Date(this.address.birthDate) : '';
   }
 
 
-  saveUser() {
+  saveAddr() {
     this.formToModel();
-    if (!this.userForm.errors && this.user.hasData()) {
-      this.userExists ? this.updateUser() : this.addUser();
+    if (!this.addrForm.errors && this.address.hasData()) {
+      this.addrExists ? this.updateAddr() : this.addAddr();
     } else {
-      this.getFormControls(this.userForm).filter(fc => fc.state.errors).forEach(fc => fc.state.markAsTouched());
+      this.getFormControls(this.addrForm).filter(fc => fc.state.errors).forEach(fc => fc.state.markAsTouched());
       console.log('Empty Data not written!');
     }
   }
 
 
-  async addUser() {
+  async addAddr() {
     this.isLoading(true);
-    await this.userService.createUser(this.user);
+    await this.addrService.createAddr(this.address);
     this.isLoading(false);
     this.closeDialog('added');
   }
 
 
-  async updateUser() {
+  async updateAddr() {
     this.isLoading(true);
-    await this.userService.updateUser(this.user);
+    await this.addrService.updateAddr(this.address);
     this.isLoading(false);
     this.closeDialog('updated');
   }
 
 
-  async deleteUser() {
+  async deleteAddr() {
     this.isLoading(true);
-    await this.userService.deleteUser(this.user);
+    await this.addrService.deleteAddr(this.address);
     this.isLoading(false);
     this.closeDialog('deleted');
   }
 
 
   closeDialog(state: string = '') {
-    this.dialogRef.close({ state: state, lang: this._locale, user: this.user });
+    this.dialogRef.close({ state: state, lang: this._locale, address: this.address });
   }
 
 
   modelToForm() {
-    this.userForm = this.formBuilder.group({
-      firstName: [this.user.firstName, Validators.nullValidator],
-      lastName: [this.user.lastName, Validators.required],
+    this.addrForm = this.formBuilder.group({
+      firstName: [this.address.firstName, Validators.nullValidator],
+      lastName: [this.address.lastName, Validators.required],
       birthDate: [this.birthDate],
-      eMail: [this.user.eMail, Validators.email],
-      zipCode: [this.user.zipCode],
-      city: [this.user.city],
-      street: [this.user.street]
+      eMail: [this.address.eMail, Validators.email],
+      zipCode: [this.address.zipCode],
+      city: [this.address.city],
+      street: [this.address.street]
     });
   }
 
 
   formToModel() {
-    this.getFormControls(this.userForm).forEach(fc => this.user[(fc.control  as keyof(User))] = fc.state.value);
-    this.user.birthDate = this.dateToTimestamp(this.userForm.controls['birthDate'].value);
-    this.data.user = new User(this.user);
+    this.getFormControls(this.addrForm).forEach(fc => this.address[(fc.control  as keyof(Addr))] = fc.state.value);
+    this.address.birthDate = this.dateToTimestamp(this.addrForm.controls['birthDate'].value);
+    this.data.address = new Addr(this.address);
   }
 
 
@@ -152,7 +151,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
   isLoading(loading: boolean) {
     this.loading = loading;
-    loading ? this.userForm.disable() : this.userForm.enable();
+    loading ? this.addrForm.disable() : this.addrForm.enable();
   }
 
 
@@ -170,7 +169,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
 
   getFilteredPostalData(field: string, findBy: string) {
-    return this.userForm.controls[field].valueChanges.pipe(
+    return this.addrForm.controls[field].valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       distinctUntilChanged(),
@@ -191,9 +190,9 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
   searchField(value: string) {
     return {
-      address: { zipCode: value, city: this.userForm.controls['city'].value, street: this.userForm.controls['street'].value, },
-      plz: { zipCode: this.userForm.controls['zipCode'].value, city: value, street: this.userForm.controls['street'].value, },
-      city: { zipCode: this.userForm.controls['zipCode'].value, city: this.userForm.controls['city'].value, street: value }
+      address: { zipCode: value, city: this.addrForm.controls['city'].value, street: this.addrForm.controls['street'].value, },
+      plz: { zipCode: this.addrForm.controls['zipCode'].value, city: value, street: this.addrForm.controls['street'].value, },
+      city: { zipCode: this.addrForm.controls['zipCode'].value, city: this.addrForm.controls['city'].value, street: value }
     }
   }
 
@@ -219,21 +218,21 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
 
   private dataMatchesCity(data: PlzRow, value: string) {
-    const uCity = (this.userForm.controls['city'].value.toLowerCase().trim() || '');
+    const aCity = (this.addrForm.controls['city'].value.toLowerCase().trim() || '');
     const dCity = data.city?.toLowerCase();
     const vCity = value.toLowerCase().trim();
-    return (uCity) 
-      ? dCity?.startsWith(vCity) && dCity?.startsWith(uCity) 
+    return (aCity) 
+      ? dCity?.startsWith(vCity) && dCity?.startsWith(aCity) 
       : dCity?.startsWith(vCity);
   }
 
 
   private dataMatchesStreet(data: PlzRow, value: string) {
-    const uStreet = (this.userForm.controls['street'].value.toLowerCase().trim() || '');
+    const aStreet = (this.addrForm.controls['street'].value.toLowerCase().trim() || '');
     const dStreet = data.street?.toLowerCase();
     const vStreet = value.toLowerCase().trim();
-    return (uStreet) 
-      ? dStreet?.startsWith(vStreet) && dStreet?.startsWith(uStreet) 
+    return (aStreet) 
+      ? dStreet?.startsWith(vStreet) && dStreet?.startsWith(aStreet) 
       : dStreet?.startsWith(vStreet); 
   }
 
@@ -288,7 +287,7 @@ export class DialogAddUserComponent implements OnInit, OnDestroy {
 
   inputFields() {
     return [... document.querySelectorAll('.dialog-container input') as any].filter(el => el.id).map(el => el.id)
-      .concat(['save-user-button']);
+      .concat(['save-addr-button']);
   }
 
 

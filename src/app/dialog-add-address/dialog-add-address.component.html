@@ -2,11 +2,11 @@
 
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
   <h1 mat-dialog-title>
-    {{ userExists ? localize().update.title || 'Update user' : localize().form.title || 'Add user'}}
+    {{ addrExists ? localize().update.title || 'Update address' : localize().form.title || 'Add address'}}
   </h1>
 
   <div mat-dialog-content>
-  <form [formGroup]="userForm">
+  <form [formGroup]="addrForm">
 
     <div>
       <mat-form-field class="mr-16" appearance="outline">
@@ -64,7 +64,7 @@
                 placeholder="{{ localize().zipCode.placeholder || '10312' }}">
         <mat-autocomplete autoActiveFirstOption #autoPlz="matAutocomplete">
           <mat-option *ngFor="let data of filteredPlzData | async" [value]="data.plz"
-                      (onSelectionChange)="userForm.controls['city'].setValue(data.city); selectionChanged = true;">
+                      (onSelectionChange)="addrForm.controls['city'].setValue(data.city); selectionChanged = true;">
             {{data.plz}} {{data.city}}
           </mat-option>
         </mat-autocomplete>
@@ -80,7 +80,7 @@
                 placeholder="{{ localize().town.placeholder || 'Staten Island, NY' }}">
         <mat-autocomplete autoActiveFirstOption #autoCity="matAutocomplete">
           <mat-option *ngFor="let data of filteredCityData | async" [value]="data.city"
-                      (onSelectionChange)="userForm.controls['zipCode'].setValue(data.plz); selectionChanged = true;">
+                      (onSelectionChange)="addrForm.controls['zipCode'].setValue(data.plz); selectionChanged = true;">
             {{data.plz}} {{data.city}}
           </mat-option>
         </mat-autocomplete>
@@ -109,23 +109,23 @@
   </form>
   </div>
 
-  <div mat-dialog-actions class="add-user-buttons">
+  <div mat-dialog-actions class="add-addr-buttons">
     <div>
       <button [disabled]="loading"
               mat-button
               (click)="onNoClick()">
         {{ localize().form.cancel || 'Cancel' }}
       </button>
-      <button id="save-user-button"
+      <button id="save-addr-button"
               [disabled]="loading"
               mat-button
-              (click)="saveUser()"
-              [attr.cdkFocusInitial]="userExists ? '' : null">
+              (click)="saveAddr()"
+              [attr.cdkFocusInitial]="addrExists ? '' : null">
         {{ localize().form.save || 'Save' }}
       </button>
-      <button *ngIf="userExists"
+      <button *ngIf="addrExists"
               [disabled]="loading" mat-button
-              (click)="deleteUser()">
+              (click)="deleteAddr()">
         {{ localize().update.delete || 'Delete' }}
       </button>
     </div>

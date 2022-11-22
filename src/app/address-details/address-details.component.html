@@ -1,0 +1,10 @@
+
+<mat-card class="addr-details">
+    <mat-card-content>
+        <p>{{ address.firstName }} {{ address.lastName }}</p>
+        <p>{{ address.eMail }} {{ phone }} {{ mobile}}</p>
+        <p>{{ birthDate | date:'mediumDate' :undefined :lang }}{{ age ? ', ' + age + localize().age || 'yo' : '' }}</p>
+        <p>{{ address.street }}</p>
+        <p>{{ address.zipCode }} {{ address.city }}</p>
+    </mat-card-content>
+</mat-card>

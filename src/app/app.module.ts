@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Generic localization
 import localeDE from '@angular/common/locales/de';
@@ -31,6 +32,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
+
 
 // Material Date localisation
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -44,7 +47,7 @@ import 'moment/locale/en-gb';
 // Firebase
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
-import { provideAuth, getAuth } from '@angular/fire/auth';
+import { AuthModule, provideAuth, getAuth } from '@angular/fire/auth';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
@@ -56,20 +59,20 @@ import { NgChartsModule } from 'ng2-charts';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 // Our Components
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { UserComponent } from './user/user.component';
-import { DialogAddUserComponent } from './dialog-add-user/dialog-add-user.component';
-import { UserDetailsComponent } from './user-details/user-details.component';
+import { StatisticsComponent } from './statistics/statistics.component';
+import { AddressComponent } from './address/address.component';
+import { DialogAddAddressComponent } from './dialog-add-address/dialog-add-address.component';
+import { AddressDetailsComponent } from './address-details/address-details.component';
 import { OsmMapComponent } from './osm-map/osm-map.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent,
-    UserComponent,
-    DialogAddUserComponent,
-    UserDetailsComponent,
+    StatisticsComponent,
+    AddressComponent,
+    DialogAddAddressComponent,
+    AddressDetailsComponent,
     OsmMapComponent
   ],
   imports: [
@@ -78,6 +81,7 @@ import { OsmMapComponent } from './osm-map/osm-map.component';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    FlexLayoutModule,
     MatToolbarModule,
     MatSidenavModule,
     MatIconModule,
@@ -95,8 +99,10 @@ import { OsmMapComponent } from './osm-map/osm-map.component';
     MatPaginatorModule,
     MatSortModule,
     MatAutocompleteModule,
+    MatPasswordStrengthModule,
     NgChartsModule,
     LeafletModule,
+    AuthModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),

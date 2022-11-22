@@ -9,11 +9,11 @@
     <div class="sidebar-container">
 
       <ul class="menue-items">
-        <li routerLink="/dashboard" routerLinkActive="router-link-active"><mat-icon>fact_check</mat-icon>{{ localize().stats || 'Dashboard' }}</li>
-        <li routerLink="/user" routerLinkActive="router-link-active"><mat-icon>perm_identity</mat-icon>{{ localize().users || 'User' }}</li>
+        <li routerLink="/statistics" routerLinkActive="router-link-active"><mat-icon>fact_check</mat-icon>{{ localize().stats || 'Dashboard' }}</li>
+        <li routerLink="/address" routerLinkActive="router-link-active"><mat-icon>people</mat-icon>{{ localize().addresses || 'Addresses' }}</li>
       </ul>
 
-      <div class="osm-container" [ngStyle]="{'visibility': fromUserComponent ? 'visible' : 'hidden'}">
+      <div class="osm-container" [ngStyle]="{'visibility': fromAddressComponent ? 'visible' : 'hidden'}">
         <app-osm-map
           [center]="mapCenter"
           (map$)="receiveMap($event)"
@@ -22,12 +22,8 @@
         </app-osm-map>
       </div>
 
-      <div *ngIf="userComponentLoaded" class="user-details-container">
-        <app-user-details [userData]="userData"></app-user-details>
-      </div>
-
-      <div *ngIf="false">
-        <ngx-auth-firebaseui></ngx-auth-firebaseui>
+      <div *ngIf="addressComponentLoaded" class="addr-details-container">
+        <app-address-details [addrData]="addrData"></app-address-details>
       </div>
 
     </div>
@@ -41,10 +37,10 @@
             {{navMode == 'side' ? (navOpen ? 'arrow_back' : 'menu') : 'menu' }}
         </mat-icon>
         <span>Simple CRM</span>
-        <button *ngIf="userComponentLoaded" class="add-user-button" (click)="userComponent.newUser()"
+        <button *ngIf="addressComponentLoaded" class="add-addr-button" (click)="addressComponent.newAddress()"
           mat-stroked-button
           color="primary"
-          [matTooltip]="localize().add || 'add user'"
+          [matTooltip]="localize().add || 'add address'"
           matTooltipPosition="below">
               <mat-icon aria-hidden="false" aria-label="add address">person_add</mat-icon>
         </button>
@@ -54,6 +50,15 @@
     <div class="router-container">
       <router-outlet (activate)="subscribeToEmitter($event)" (deactivate)="unsubscribe()"></router-outlet>
     </div>
+
+    <div *ngIf="false">
+      <ngx-auth-firebaseui></ngx-auth-firebaseui>
+    </div>
+
+    <div *ngIf="false">
+      <ngx-auth-firebaseui-user></ngx-auth-firebaseui-user>
+    </div>
+
   </div>
 
 </mat-drawer-container>
