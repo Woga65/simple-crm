@@ -29,8 +29,6 @@ export class LoginComponent implements OnInit {
 
   loginChanged(user: User | null) {
     this.loggedIn = !!user;
-    console.log('logged in: ', this.loggedIn);
-    console.log('User: ', user?.toJSON());
   }
 
   

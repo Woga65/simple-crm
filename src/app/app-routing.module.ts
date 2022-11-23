@@ -6,7 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { LoggedInGuard } from 'ngx-auth-firebaseui';
 
 const routes: Routes = [
-  { path: '', component: StatisticsComponent, canActivate: [LoggedInGuard] },
+  { path: '', component: AddressComponent, canActivate: [LoggedInGuard] },
   { path: 'login', component: LoginComponent},
   { path: 'statistics', component: StatisticsComponent, canActivate: [LoggedInGuard] },
   { path: 'address', component: AddressComponent, canActivate: [LoggedInGuard] },

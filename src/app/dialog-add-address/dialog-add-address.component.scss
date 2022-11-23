@@ -1,6 +1,3 @@
-.birth-date {
-    width: 48%;
-}
 
 .add-addr-buttons {
     display: flex;
@@ -18,5 +15,14 @@
         //top: -1.5rem;
         bottom: 0;
         width: calc(100% + 3rem);
+    }
+
+    .mat-form-field {
+        min-width: 48%;
+    }
+
+    .birth-date {
+        max-width: 48%;
+        min-width: 200px;
     }
 }
