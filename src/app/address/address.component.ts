@@ -212,6 +212,7 @@ export class AddressComponent implements OnInit, AfterViewInit, OnDestroy, After
   editAddressByMouse(addrData: Addr, row: number) {
     if (this.changedRowId == `row-${row}`) this.editAddress(addrData.id);
     this.changedRowId = `row-${row}`;
+    this.forceFocus = false;
   }
 
 
