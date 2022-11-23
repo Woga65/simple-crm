@@ -1,0 +1,24 @@
+<div *ngIf="!loggedIn">
+    <ngx-auth-firebaseui (onSuccess)="onLogin($event)"
+        [signInTabText]="localize().login.signInTab || 'Sign in'"
+        [signInCardTitleText]="localize().login.signInCard || 'Signing in'"
+        [loginButtonText]="localize().login.loginButton || 'Log In'"
+        [forgotPasswordButtonText]="localize().login.forgotPassword || 'Forgot Password ?'"
+        [emailText]="localize().login.emailText || 'E-mail'"
+        [passwordText]="localize().login.passwordText || 'Password'"
+        [registerTabText]="localize().login.registerTab || 'Register'"
+        [registerCardTitleText]="localize().login.registerCard || 'Registration'"
+        [registerButtonText]="localize().login.registerButton || 'Register'"
+        [guestButtonText]="localize().login.guestButton || 'continue as guest'"
+        [resetPasswordTabText]="localize().login.resetPasswordTab || 'Reset Password'"
+        [resetPasswordInputText]="localize().login.resetPasswordInput || 'E-mail address to reset password'"
+        [resetPasswordActionButtonText]="localize().login.resetPasswordButton || 'Reset'"
+        [providers]="[providers.EmailAndPassword, providers.Google, providers.ANONYMOUS]">
+    </ngx-auth-firebaseui>
+</div>
+
+<div *ngIf="loggedIn">
+    <ngx-auth-firebaseui-user>
+    </ngx-auth-firebaseui-user>
+</div>
+

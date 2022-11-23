@@ -7,7 +7,9 @@ import { LangService } from './services/lang.service';
 import { GeocodeService, GeoResult } from './services/geocode.service';
 import { take } from 'rxjs';
 import { Map } from 'leaflet';
-import { Auth, User as AfUser } from '@angular/fire/auth';
+import { Auth, User } from '@angular/fire/auth';
+import { AuthProvider } from 'ngx-auth-firebaseui';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -35,23 +37,29 @@ export class AppComponent implements OnInit {
   mapCenter = { x: 0, y: 0, z: 0, text: '' };
 
   loggedIn: boolean = false;
+  providers = AuthProvider;
 
   constructor(
     public geocodeService: GeocodeService,
     public langService: LangService,
-    private afAuth: Auth 
+    private router: Router,
+    private auth: Auth 
     ) {}
 
 
   ngOnInit(): void {
-    this.afAuth.onAuthStateChanged(this.loginChanged.bind(this));
+    this.auth.onAuthStateChanged(this.loginChanged.bind(this));
+  }
+
+  onSignOut() {
+    this.router.navigate(['login']);
   }
 
 
-  loginChanged(afUser: AfUser | null) {
-    this.loggedIn = !!afUser;
+  loginChanged(user: User | null) {
+    this.loggedIn = !!user;
     console.log('logged in: ', this.loggedIn);
-    console.log('afUser: ', afUser?.toJSON());
+    console.log('User: ', user?.toJSON());
   }
 
 

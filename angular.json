@@ -41,7 +41,7 @@
               {
                 "glob": "**/*",
                 "input": "./node_modules/ngx-auth-firebaseui/assets",
-                "output": "./assets/"
+                "output": "assets/"
               }
             ],
             "styles": [
@@ -117,7 +117,12 @@
               "glob": "**/*",
               "input": "./node_modules/leaflet/dist/images",
               "output": "assets/"
-              }
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/ngx-auth-firebaseui/assets",
+                "output": "assets/"
+              }              
             ],
             "styles": [
               "./node_modules/leaflet/dist/leaflet.css",

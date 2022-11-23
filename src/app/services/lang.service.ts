@@ -53,6 +53,12 @@ export class LangService implements OnInit{
     return {
       age: 'J.', byAge: 'nach Alter', byCategory: 'Kategorie', add: 'hinzufügen', stats: 'Statistik', addresses: 'Adressen',
       table: { title: 'Nutzerliste', fullName: 'Name', eMail: 'E-Mail', address: 'Adresse' },
+      login: { 
+        signInTab: 'Login', signInCard: 'Login', loginButton: 'Login', forgotPassword: 'Passwort vergessen?',
+        emailText: 'E-Mail', passwordText: 'Passwort', registerTab: 'Registrieren', registerCard: 'Registrierung',
+        registerButton: 'Registrieren', guestButton: 'weiter als Gast', resetPasswordTab: 'Passwort zurücksetzen',
+        resetPasswordInput: 'E-Mail Adresse zum Zurücksetzen des Passworts', resetPasswordButton: 'zurücksetzen',
+      },
       form: { title: 'Nutzer hinzufügen', cancel: 'abbrechen', save: 'speichern', lang: 'Deutsch (DE)' },
       update: { title: 'Nutzer bearbeiten', delete: 'löschen' },
       firstName: { text: 'Vorname', placeholder: 'Wolfgang' },
@@ -69,7 +75,7 @@ export class LangService implements OnInit{
   private usFormat(): any {
     return {
       age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add address', stats: 'Statistics', addresses: 'Addresses',
-      table: {}, form: { lang: 'English (US)' }, update: {}, firstName: {}, 
+      login: {}, table: {}, form: { lang: 'English (US)' }, update: {}, firstName: {}, 
       lastName: {}, birthDate: { hint: 'MM/DD/YYYY' }, eMail: {},
       street: {}, zipCode: {}, town: {},
     };
@@ -80,7 +86,7 @@ export class LangService implements OnInit{
     this.lang = this._locale = 'en-gb';
     return {
       age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add address', stats: 'Statistics', addresses: 'Addresses',
-      table: {}, form: { lang: 'English (GB)' }, update: {}, firstName: { placeholder: 'John' }, 
+      login: {}, table: {}, form: { lang: 'English (GB)' }, update: {}, firstName: { placeholder: 'John' }, 
       lastName: { placeholder: 'Smith' }, birthDate: { hint: 'DD/MM/YYYY' }, 
       eMail: { placeholder: 'john@smith.co.uk' }, street: { text: 'House No + Street',
       placeholder: '85 Fleet street' }, zipCode: { text: 'Postcode', placeholder: 'EC4Y 1AE' },
@@ -93,7 +99,7 @@ export class LangService implements OnInit{
     this.lang = this._locale = 'en-US';
     return {
       age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add address', stats: 'Statistics', addresses: 'Addresses',
-      table: {}, form: { lang: 'English (JP)' }, update: {}, firstName: {},
+      login: {}, table: {}, form: { lang: 'English (JP)' }, update: {}, firstName: {},
       lastName: {}, birthDate: { hint: 'YYYY/MM/DD' }, eMail: {},
       street: {}, zipCode: {}, town: {},
     }
@@ -104,7 +110,7 @@ export class LangService implements OnInit{
     this.lang = this._locale = 'en-US';
     return {
       age: 'yo', byAge: 'Ages', byCategory: 'Categories', add: 'add address', stats: 'Statistics', addresses: 'Addresses',
-      table: {}, form: { lang: 'English (US)' }, update: {},
+      login: {}, table: {}, form: { lang: 'English (US)' }, update: {},
       firstName: {}, lastName: {}, birthDate: { hint: '' },
       eMail: {}, street: {}, zipCode: {}, town: {},
     };

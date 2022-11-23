@@ -86,11 +86,13 @@ mat-toolbar, mat-toolbar-row, .logo-container {
 
 mat-toolbar .add-addr-button {
     margin-left: auto;
+    margin-right: calc(var(--font-size) * 1.5);
     height: calc(var(--font-size) * 1.85);
     display: flex; 
     align-items: center;
     justify-content: center;
     background-color: white;
+    color: #3f51b5;
 }
 
 @media screen and (min-width: 785px) {
@@ -101,6 +103,9 @@ mat-toolbar .add-addr-button {
 }
 
 @media screen and (min-width: 885px) {
+    mat-toolbar .user-avatar {
+        margin-right: calc(var(--font-size) * 2.5);
+    }
     mat-toolbar .add-addr-button {
         margin-right: calc(var(--font-size) * 2.5);
     }

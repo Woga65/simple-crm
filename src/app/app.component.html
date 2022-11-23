@@ -38,12 +38,17 @@
         </mat-icon>
         <span>Simple CRM</span>
         <button *ngIf="addressComponentLoaded" class="add-addr-button" (click)="addressComponent.newAddress()"
-          mat-stroked-button
-          color="primary"
+          mat-raised-button
+          color="#ffffff"
           [matTooltip]="localize().add || 'add address'"
           matTooltipPosition="below">
               <mat-icon aria-hidden="false" aria-label="add address">person_add</mat-icon>
         </button>
+
+        <div *ngIf="loggedIn" class="user-avatar" [style.margin-left]="addressComponentLoaded ? 'unset' : 'auto'">
+          <ngx-auth-firebaseui-avatar (onSignOut)="onSignOut()">
+          </ngx-auth-firebaseui-avatar>
+        </div>
       </mat-toolbar-row>
     </mat-toolbar>
 
@@ -51,12 +56,9 @@
       <router-outlet (activate)="subscribeToEmitter($event)" (deactivate)="unsubscribe()"></router-outlet>
     </div>
 
-    <div *ngIf="false">
-      <ngx-auth-firebaseui></ngx-auth-firebaseui>
-    </div>
-
-    <div *ngIf="false">
-      <ngx-auth-firebaseui-user></ngx-auth-firebaseui-user>
+    <div *ngIf="loggedIn">
+      <ngx-auth-firebaseui-avatar (onSignOut)="onSignOut()">
+      </ngx-auth-firebaseui-avatar>
     </div>
 
   </div>

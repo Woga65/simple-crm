@@ -64,6 +64,7 @@ import { AddressComponent } from './address/address.component';
 import { DialogAddAddressComponent } from './dialog-add-address/dialog-add-address.component';
 import { AddressDetailsComponent } from './address-details/address-details.component';
 import { OsmMapComponent } from './osm-map/osm-map.component';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -73,7 +74,8 @@ import { OsmMapComponent } from './osm-map/osm-map.component';
     AddressComponent,
     DialogAddAddressComponent,
     AddressDetailsComponent,
-    OsmMapComponent
+    OsmMapComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -107,7 +109,10 @@ import { OsmMapComponent } from './osm-map/osm-map.component';
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
     provideFirestore(() => getFirestore()),
-    NgxAuthFirebaseUIModule.forRoot(environment.firebase),
+    NgxAuthFirebaseUIModule.forRoot(environment.firebase, undefined, {
+      authGuardFallbackURL: 'login',
+      authGuardLoggedInURL: 'address'
+    }),
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: navigator.language },

@@ -2,13 +2,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { AddressComponent } from './address/address.component';
-import { AddressDetailsComponent } from './address-details/address-details.component';
+import { LoginComponent } from './login/login.component';
+import { LoggedInGuard } from 'ngx-auth-firebaseui';
 
 const routes: Routes = [
-  { path: '', component: StatisticsComponent },
-  { path: 'statistics', component: StatisticsComponent },
-  { path: 'address', component: AddressComponent },
-  { path: 'address/:id', component: AddressDetailsComponent },
+  { path: '', component: StatisticsComponent, canActivate: [LoggedInGuard] },
+  { path: 'login', component: LoginComponent},
+  { path: 'statistics', component: StatisticsComponent, canActivate: [LoggedInGuard] },
+  { path: 'address', component: AddressComponent, canActivate: [LoggedInGuard] },
+  { path: '**', component: StatisticsComponent, canActivate: [LoggedInGuard] },
 ];
 
 @NgModule({
