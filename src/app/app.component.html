@@ -56,11 +56,6 @@
       <router-outlet (activate)="subscribeToEmitter($event)" (deactivate)="unsubscribe()"></router-outlet>
     </div>
 
-    <div *ngIf="loggedIn">
-      <ngx-auth-firebaseui-avatar (onSignOut)="onSignOut()">
-      </ngx-auth-firebaseui-avatar>
-    </div>
-
   </div>
 
 </mat-drawer-container>
