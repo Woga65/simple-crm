@@ -46,7 +46,9 @@
         </button>
 
         <div *ngIf="loggedIn" class="user-avatar" [style.margin-left]="addressComponentLoaded ? 'unset' : 'auto'">
-          <ngx-auth-firebaseui-avatar (onSignOut)="onSignOut()">
+          <ngx-auth-firebaseui-avatar (onSignOut)="onSignOut()"
+            [textSignOut]="localize().login.signOutButton || 'Sign Out'"
+            [textProfile]="localize().login.profile || 'Profile'">
           </ngx-auth-firebaseui-avatar>
         </div>
       </mat-toolbar-row>

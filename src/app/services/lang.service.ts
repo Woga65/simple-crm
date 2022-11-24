@@ -58,6 +58,8 @@ export class LangService implements OnInit{
         emailText: 'E-Mail', passwordText: 'Passwort', registerTab: 'Registrieren', registerCard: 'Registrierung',
         registerButton: 'Registrieren', guestButton: 'weiter als Gast', resetPasswordTab: 'Passwort zurücksetzen',
         resetPasswordInput: 'E-Mail Adresse zum Zurücksetzen des Passworts', resetPasswordButton: 'zurücksetzen',
+        signOutButton: 'Abmelden', profile: 'Profil', verified: 'email verifiziert', notVerified: 'nicht verifiziert',
+        editButton: 'Bearbeiten', deleteButton: 'Konto löschen', cancelButton: 'Abbrechen', saveButton: 'Speichern',
       },
       form: { title: 'Nutzer hinzufügen', cancel: 'abbrechen', save: 'speichern', lang: 'Deutsch (DE)' },
       update: { title: 'Nutzer bearbeiten', delete: 'löschen' },

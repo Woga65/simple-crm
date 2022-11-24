@@ -18,7 +18,15 @@
 </div>
 
 <div *ngIf="loggedIn">
-    <ngx-auth-firebaseui-user>
+    <ngx-auth-firebaseui-user
+        [emailVerifiedText]="localize().login.verified || 'email is verified'"
+        [emailNotVerifiedText]="localize().login.notVerified || 'email is not verified'"
+        [editButtonText]="localize().login.editButton || 'edit'"
+        [deleteAccountButtonText]="localize().login.deleteButton || 'Delete account'"
+        [signoutButtonText]="localize().login.signOutButton || 'Sign out'"
+        [cancelButtonText]="localize().login.cancelButton || 'cancel'"
+        [saveChangesButtonText]="localize().login.saveButton || 'Save changes'"
+        >
     </ngx-auth-firebaseui-user>
 </div>
 
