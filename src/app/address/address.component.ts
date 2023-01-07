@@ -166,7 +166,8 @@ export class AddressComponent implements OnInit, AfterViewInit, OnDestroy, After
         const v = (prop.toLowerCase().includes('date'))
           ? new Date(((a[prop as keyof Addr] as string) || '')).toLocaleDateString()
           : (prop != 'id') ? ((a[prop as keyof Addr]) || '').toString().toLowerCase() : '';
-        if (v.includes(f) || (prop != 'id' && ((a[prop as keyof Addr]) || '').toString().toLowerCase().includes(f)) ) return true;
+        if ( v.includes(f) || (prop != 'id' && ((a[prop as keyof Addr]) || '').toString().toLowerCase().includes(f)) 
+          ) return true;
       }
       return false;
     });

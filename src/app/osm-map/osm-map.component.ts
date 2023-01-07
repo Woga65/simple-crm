@@ -22,7 +22,12 @@ export class OsmMapComponent implements OnInit, OnDestroy, OnChanges {
                       zoom: 10,
                       center: latLng(50.550070000137225 , 9.681850024350837)
   };
-  @Input('center') center = { x: 9.681850024350837, y: 50.550070000137225, z: 10, text: '' };
+  @Input('center') center = { 
+    x: 9.681850024350837, 
+    y: 50.550070000137225, 
+    z: 10, 
+    text: ''
+  };
   public map!: Map;
   public zoom: number = 1;
   marker: any = null;
@@ -76,7 +81,11 @@ export class OsmMapComponent implements OnInit, OnDestroy, OnChanges {
 
 
   setMarker() {
-    return (this.center.x || this.center.y) && this.map ? marker(latLng(this.center.y, this.center.x)).addTo(this.map) : null;
+    return (
+      (this.center.x || this.center.y) && this.map 
+        ? marker(latLng(this.center.y, this.center.x)).addTo(this.map)
+        : null
+    );
   }
 
 

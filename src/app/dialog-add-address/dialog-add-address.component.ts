@@ -84,7 +84,9 @@ export class DialogAddAddressComponent implements OnInit, OnDestroy {
     if (!this.addrForm.errors && this.address.hasData()) {
       this.addrExists ? this.updateAddr() : this.addAddr();
     } else {
-      this.getFormControls(this.addrForm).filter(fc => fc.state.errors).forEach(fc => fc.state.markAsTouched());
+      this.getFormControls(this.addrForm)
+        .filter(fc => fc.state.errors)
+        .forEach(fc => fc.state.markAsTouched());
       console.log('Empty Data not written!');
     }
   }
@@ -286,7 +288,9 @@ export class DialogAddAddressComponent implements OnInit, OnDestroy {
 
 
   inputFields() {
-    return [... document.querySelectorAll('.dialog-container input') as any].filter(el => el.id).map(el => el.id)
+    return [... document.querySelectorAll('.dialog-container input') as any]
+      .filter(el => el.id)
+      .map(el => el.id)
       .concat(['save-addr-button']);
   }
 

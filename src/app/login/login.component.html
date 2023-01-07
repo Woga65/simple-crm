@@ -1,5 +1,6 @@
 <div *ngIf="!loggedIn">
     <ngx-auth-firebaseui (onSuccess)="onLogin($event)"
+        [tabIndex]="1"
         [signInTabText]="localize().login.signInTab || 'Sign in'"
         [signInCardTitleText]="localize().login.signInCard || 'Signing in'"
         [loginButtonText]="localize().login.loginButton || 'Log In'"

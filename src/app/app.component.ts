@@ -94,7 +94,10 @@ export class AppComponent implements OnInit {
     return this.addressComponent.showMapEvent.subscribe( (e:any) => {
       this.fromAddressComponent = this.addressComponentLoaded = true; // e['fromAddressList'];
       this.addrData = e['data'];
-      this.geoData$ = (this.geocodeService.getLocationByAddress(this.addrData.zipCode, this.addrData.city, this.addrData.street) as Observable<GeoResult>)
+      this.geoData$ = (
+        this.geocodeService.getLocationByAddress(
+          this.addrData.zipCode, this.addrData.city, this.addrData.street) as Observable<GeoResult>
+        )
         .pipe(take(1))
         .subscribe(geoData => this.geoData = this.showAddressLocation(geoData));
     });
