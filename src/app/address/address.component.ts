@@ -28,7 +28,7 @@ export class AddressComponent implements OnInit, AfterViewInit, OnDestroy, After
   addresses: Addr[] = [];
 
   displayedColumns: string[] = ['position', 'firstName', 'lastName', 'eMail', 'city', 'marker'];
-  dataSource: any;    // MatTableDataSource
+  dataSource: MatTableDataSource<Addr> = new MatTableDataSource(this.addresses);    // MatTableDataSource
 
   pageIndex: number = 0;
   firstTableRow: ElementRef<HTMLTableRowElement> | any;
@@ -121,9 +121,9 @@ export class AddressComponent implements OnInit, AfterViewInit, OnDestroy, After
       console.log('Neue Daten sind verfügbar: ', addrData);
       this.addresses = this.filterAddressData(addrData, this.filterValue);
       this.dataSource = new MatTableDataSource(this.addresses);
-      this.dataSource.sortingDataAccessor = ((row:Addr, name:string) => {
+      this.dataSource.sortingDataAccessor = ((row:Addr|any, name:string) => {
         return (name == 'marker' && !row.marker)
-          ? ( this.dataSource.sort.direction == 'asc' ? '=z' : '= ' ) 
+          ? ( this.dataSource.sort?.direction == 'asc' ? '=z' : '= ' ) 
           : row[name as keyof Addr];
       });
       this.dataSource.sort = this.sort;
@@ -135,7 +135,7 @@ export class AddressComponent implements OnInit, AfterViewInit, OnDestroy, After
   getAddressList() {
     return (this.addrService.getAddrList() as Observable<Addr[]>)
       .pipe(
-        takeUntil(this.componentIsDestroyed$ && this.dataFilterChanged$),
+        takeUntil(this.componentIsDestroyed$ || this.dataFilterChanged$),
         map(addr => this.addrBirthDateToString(addr))
       );
   }
