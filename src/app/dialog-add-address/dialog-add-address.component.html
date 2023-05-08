@@ -64,7 +64,8 @@
                 placeholder="{{ localize().zipCode.placeholder || '10312' }}">
         <mat-autocomplete autoActiveFirstOption #autoPlz="matAutocomplete">
           <mat-option *ngFor="let data of filteredPlzData | async" [value]="data.plz"
-                      (onSelectionChange)="addrForm.controls['city'].setValue(data.city); selectionChanged = true;">
+                      (onSelectionChange)="addrForm.controls['city'].setValue(data.city);
+                                           selectionChanged = true;">
             {{data.plz}} {{data.city}}
           </mat-option>
         </mat-autocomplete>
@@ -80,7 +81,8 @@
                 placeholder="{{ localize().town.placeholder || 'Staten Island, NY' }}">
         <mat-autocomplete autoActiveFirstOption #autoCity="matAutocomplete">
           <mat-option *ngFor="let data of filteredCityData | async" [value]="data.city"
-                      (onSelectionChange)="addrForm.controls['zipCode'].setValue(data.plz); selectionChanged = true;">
+                      (onSelectionChange)="addrForm.controls['zipCode'].setValue(data.plz);
+                                           selectionChanged = true;">
             {{data.plz}} {{data.city}}
           </mat-option>
         </mat-autocomplete>
@@ -98,8 +100,10 @@
                 placeholder="{{ localize().street.placeholder || '17 Adams Street' }}">
         <mat-autocomplete autoActiveFirstOption #autoStreet="matAutocomplete">
           <mat-option *ngFor="let data of filteredStreetData | async" [value]="data.street"
-                      (onSelectionChange)="selectionChanged = true;">
-            {{data.street}}
+                      (onSelectionChange)="addrForm.controls['zipCode'].setValue(data.plz);
+                                           addrForm.controls['city'].setValue(data.city);
+                                           selectionChanged = true;">
+            {{data.street}}, {{data.plz}} {{data.city}}
           </mat-option>
         </mat-autocomplete>
         <!-- <mat-hint>please enter address</mat-hint> -->

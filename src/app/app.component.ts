@@ -90,7 +90,7 @@ export class AppComponent implements OnInit {
   }
 
 
-  geoLocationSubscription() {
+  geoLocationSubscription(): Subscription {
     return this.addressComponent.showMapEvent.subscribe( (e:any) => {
       this.fromAddressComponent = this.addressComponentLoaded = true; // e['fromAddressList'];
       this.addrData = e['data'];
