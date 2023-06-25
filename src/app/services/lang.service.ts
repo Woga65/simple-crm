@@ -52,7 +52,7 @@ export class LangService implements OnInit{
     this.lang = this._locale = 'de';
     return {
       age: 'J.', byAge: 'nach Alter', byCategory: 'Kategorie', add: 'hinzufügen', stats: 'Statistik', addresses: 'Adressen',
-      table: { title: 'Nutzerliste', fullName: 'Name', eMail: 'E-Mail', address: 'Adresse' },
+      table: { title: 'Adressliste', fullName: 'Name', eMail: 'E-Mail', address: 'Adresse' },
       login: { 
         signInTab: 'Login', signInCard: 'Login', loginButton: 'Login', forgotPassword: 'Passwort vergessen?',
         emailText: 'E-Mail', passwordText: 'Passwort', registerTab: 'Registrieren', registerCard: 'Registrierung',
@@ -61,8 +61,8 @@ export class LangService implements OnInit{
         signOutButton: 'Abmelden', profile: 'Profil', verified: 'email verifiziert', notVerified: 'nicht verifiziert',
         editButton: 'Bearbeiten', deleteButton: 'Konto löschen', cancelButton: 'Abbrechen', saveButton: 'Speichern',
       },
-      form: { title: 'Nutzer hinzufügen', cancel: 'abbrechen', save: 'speichern', lang: 'Deutsch (DE)' },
-      update: { title: 'Nutzer bearbeiten', delete: 'löschen' },
+      form: { title: 'Adresse hinzufügen', cancel: 'abbrechen', save: 'speichern', lang: 'Deutsch (DE)' },
+      update: { title: 'Adresse bearbeiten', delete: 'löschen' },
       firstName: { text: 'Vorname', placeholder: 'Wolfgang' },
       lastName: { text: 'Familienname', placeholder: 'Siebert' },
       birthDate: { text: 'Geburtsdatum', hint: 'DD.MM.YYYY' },
